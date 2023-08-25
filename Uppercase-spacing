@@ -1,0 +1,10 @@
+uppercase = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"]
+
+def spacing_uppercase():
+	result = ""
+	for character in uppercase:
+		result += "HH" + character + "HH\n"
+	Font.newTab(result)
+
+spacing_uppercase()
+
