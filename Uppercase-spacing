@@ -1,12 +1,23 @@
-# Get the current font and all its glyphs
-font = Glyphs.font
-glyphs = font.glyphs
+def uppercase_spacing():
 
-# List of uppercase characters
-uppercase = [chr(i) for i in range(65, 91)]
+	# List of uppercase characters
+	uppercase = [chr(i) for i in range(65, 91)]
 
-# Concatenate all results into a single string
-result_string = "\n".join(["HH" + character + "HH" for character in uppercase])
+	# Concatenate all results into a single string
+	result_string = "\n".join(["HH" + character + "HH"+ " " "OO" + character + "OO" for character in uppercase])
 
-# Create a new tab with the concatenated string
-font.newTab(result_string)
+	# Create a new tab with the concatenated string
+	Font.newTab(result_string)
+	
+def lowercase_spacing():
+	
+	# List of lowercase characters
+	lowercase = [chr(i) for i in range(97,122)]
+	
+	# Concatenate all results into a single string
+	result_string = "\n".join(["nn" + character + "nn"+ " " "oo" + character + "oo" for character in lowercase])
+	
+	# Create a new tab with the concatenated string
+	Font.newTab(result_string)
+
+	
