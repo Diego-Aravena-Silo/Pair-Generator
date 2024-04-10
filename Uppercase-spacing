@@ -47,6 +47,8 @@ class SpacingPairs:
             self.lowercase_spacing()
         if self.w.number.get():
             self.figure_spacing()
+        if self.w.currency.get():
+            self.currency_spacing()
 
     def uppercase_spacing(self):
         # List of uppercase characters
@@ -76,6 +78,20 @@ class SpacingPairs:
         # Display the result string in a new tab
         Font.newTab(result_string)
 
+    def currency_spacing(self):
+        # List of currencies
+        currency = ["\u0192", "\u0E3F", "\u20BF", "\u00A2", "\u00A4", "\u0024", "\u20AC", "\u20B4", "\u20A4", "\u20BA", "\u20A7", "\u20BD", "\u20B9", "\u20AA", "\u00A3", "\u20B8", "\u20AE", "\u20A9", "\u00A5"]
+
+        # Concatenate all results into a single string
+        result_string = "\n".join(
+        "12" + character + " 23" + character + " 34" + character + " 45" + character + " 56" + character + " 67" + character + " 78" + character + " 89" + character + " 90" + character + " 01" + character if character == "\u00A2"
+        else character + "12 " + character + "23 " + character + "34 " + character + "45 " + character + "56 " + character + "67 " + character + "78 " + character + "89 " + character + "90 " + character + "01"
+        for character in currency
+    	)
+
+        # Display the result string in a new tab
+        Font.newTab(result_string)
 
 if __name__ == "__main__":
     SpacingPairs()
+
