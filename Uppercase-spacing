@@ -29,7 +29,7 @@ class SpacingPairs:
             (253, 15, 75, 22), "Currency", sizeStyle="small", callback=self.checkbox_callback
         )
         self.w.pairsButton = vanilla.Button(
-            (10, 50, -10, 22), "Generate Pairs", sizeStyle="regular", callback=self.button_callback
+            (10, 50, -10, 22), "Generate", sizeStyle="regular", callback=self.button_callback
         )
 
         self.w.open()  # Open the window
@@ -94,4 +94,3 @@ class SpacingPairs:
 
 if __name__ == "__main__":
     SpacingPairs()
-
