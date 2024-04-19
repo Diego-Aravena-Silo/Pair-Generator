@@ -67,7 +67,14 @@ class SpacingPairs:
             self.figure_spacing()
         if self.w.currency.get():
             self.currency_spacing()
+        if self.w.allUpper.get():
+            self.all_uppercase_spacing()
+        if self.w.allLower.get():
+            self.all_lowercase_spacing()
+        if self.w.UppervsLower.get():
+            self.upper_lower()
 
+        # Functions:
     def uppercase_spacing(self):
         # List of uppercase characters
         uppercase = [chr(i) for i in range(65, 91)]
@@ -109,6 +116,42 @@ class SpacingPairs:
 
         # Display the result string in a new tab
         Font.newTab(result_string)
+
+    def all_uppercase_spacing(self):
+        # List of uppercase characters
+        uppercase = [chr(i) for i in range(65, 91)]
+
+        # Concatenate all results into a single string
+        result_string = "\n".join([character + "A" + character + "B" + character + "C" + character + "D" + character + "E" + character + "F" + character + "G" + character + "H" + character + "I" + character + "J" + character + "K" + character + "L" + character + "M" + character + "N" + character + "O" + character + "P" + character + "Q" + character + "R" + character + "S" + character + "T" + character + "U" + character + "V" + character + "W" + character + "X" + character + "Y" + character + "Z" + character for character in uppercase])
+
+        Font.newTab(result_string)
+
+    def all_lowercase_spacing(self):
+        # List of lowercase characters
+        lowercase = [chr(i) for i in range(97, 123)]
+
+        # Concatenate all results into a single string
+        result_string = "\n".join([character + "a" + character + "b" + character + "c" + character + "d" + character + "e" + character + "f" + character + "g" + character + "h" + character + "i" + character + "j" + character + "k" + character + "l" + character + "m" + character + "n" + character + "o" + character + "p" + character + "q" + character + "r" + character + "s" + character + "t" + character + "u" + character + "v" + character + "w" + character + "x" + character + "y" + character + "z" + character for character in lowercase])
+
+        Font.newTab(result_string)
+
+    def upper_lower(self):
+        # List of lowercase characters
+        lowercase = [chr(i) for i in range(97, 123)]
+
+        # List of uppercase characters
+        uppercase = [chr(i) for i in range(65, 91)]
+
+        # Initialize an empty string to hold all combinations
+        all_combinations = ""
+
+        # Create a combined string for each uppercase letter and append it to all_combinations
+        for upper in uppercase:
+            combined_string = "".join([upper + char + "nnon " for char in lowercase])
+            all_combinations += combined_string + "\n"  # Add a newline for each uppercase block
+
+        # Open a new tab with all the combinations
+        Font.newTab(all_combinations)
 
 if __name__ == "__main__":
     SpacingPairs()
