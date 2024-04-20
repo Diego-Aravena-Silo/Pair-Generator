@@ -1,5 +1,36 @@
 import vanilla
 
+# Initialize an empty dictionary
+my_dict = {}
+
+# First, group glyphs by category and subcategory
+for glyph in Glyphs.font.glyphs:
+    category = glyph.category
+    subcategory = glyph.subCategory
+    unicode = glyph.unicode  # Assuming there is a unicode attribute
+    glyph_name = glyph.name
+
+    # Check if the category key already exists in the dictionary
+    if category not in my_dict:
+        my_dict[category] = {}  # Initialize a new dictionary for this category if it doesn't exist
+
+    # Check if the subcategory key already exists in the category dictionary
+    if subcategory not in my_dict[category]:
+        my_dict[category][subcategory] = {}  # Initialize a new dictionary for this subcategory if it doesn't exist
+
+    # Check if the unicode key already exists in the subcategory dictionary
+    if unicode not in my_dict[category][subcategory]:
+        my_dict[category][subcategory][unicode] = []  # Initialize a new list for this unicode if it doesn't exist
+
+    # Append the glyph name to the appropriate list
+    my_dict[category][subcategory][unicode].append(glyph_name)
+
+try:
+    currency_unicode = my_dict['Symbol']['Currency'].keys()
+    symbols = [chr(int(code, 16)) for code in currency_unicode]
+except KeyError:
+    pass
+
 class SpacingPairs:
 
     def __init__(self):
@@ -61,18 +92,25 @@ class SpacingPairs:
         # This method is called when the button is pressed.
         if self.w.uppercase.get():
             self.uppercase_spacing()
+            self.w.uppercase.set(False)
         if self.w.lowercase.get():
             self.lowercase_spacing()
+            self.w.lowercase.set(False)
         if self.w.number.get():
             self.figure_spacing()
+            self.w.number.set(False)
         if self.w.currency.get():
             self.currency_spacing()
+            self.w.currency.set(False)
         if self.w.allUpper.get():
             self.all_uppercase_spacing()
+            self.w.allUpper.set(False)
         if self.w.allLower.get():
             self.all_lowercase_spacing()
+            self.w.allLower.set(False)
         if self.w.UppervsLower.get():
             self.upper_lower()
+            self.w.UppervsLower.set(False)
 
         # Functions:
     def uppercase_spacing(self):
@@ -105,7 +143,7 @@ class SpacingPairs:
 
     def currency_spacing(self):
         # List of currencies
-        currency = ["\u0192", "\u0E3F", "\u20BF", "\u00A2", "\u00A4", "\u0024", "\u20AC", "\u20B4", "\u20A4", "\u20BA", "\u20A7", "\u20BD", "\u20B9", "\u20AA", "\u00A3", "\u20B8", "\u20AE", "\u20A9", "\u00A5"]
+        currency = [chr(int(code, 16)) for code in currency_unicode]
 
         # Concatenate all results into a single string
         result_string = "\n".join(
@@ -155,4 +193,3 @@ class SpacingPairs:
 
 if __name__ == "__main__":
     SpacingPairs()
-
