@@ -45,15 +45,22 @@ try:
     else:
         FIGURES = []
 
+    if 'Punctuation' in my_dict and None in my_dict['Punctuation']:
+        first_group_unicodes = my_dict['Punctuation'][None].keys()
+        FIRST_GROUP_PUNCTUATION = [chr(int(code, 16)) for code in first_group_unicodes if code != None]
+    else:
+        FIRST_GROUP_PUNCTUATION = []
+
 except KeyError as e:
     print(f"Key error: {e}")
     UPPERCASE, LOWERCASE, SYMBOLS, FIGURES = [], [], [], []
 
 # Outputs for verification
-print("Uppercase letters:", UPPERCASE)
-print("Lowercase letters:", LOWERCASE)
-print("Currency symbols:", SYMBOLS)
-print("Figure characters:", FIGURES)
+#print("Uppercase letters:", UPPERCASE)
+#print("Lowercase letters:", LOWERCASE)
+#print("Currency symbols:", SYMBOLS)
+#print("Figure characters:", FIGURES)
+print(FIRST_GROUP_PUNCTUATION)
 
 class SpacingPairs:
 
@@ -92,11 +99,11 @@ class SpacingPairs:
         self.w.UppervsLower = vanilla.CheckBox(
             (220, 40, 100, 22), "Upper vs Lower", sizeStyle="small", callback=self.checkbox_callback
         )
-        self.w.PunctuationLetter = vanilla.CheckBox(
-            (15, 66, 115, 22), "Punctuation Letter", sizeStyle="small", callback=self.checkbox_callback
+        self.w.Punctuation = vanilla.CheckBox(
+            (15, 66, 115, 22), "Punctuation", sizeStyle="small", callback=self.checkbox_callback
         )
-        self.w.PunctuationNumber = vanilla.CheckBox(
-            (145, 66, 125, 22), "Punctuation Number", sizeStyle="small", callback=self.checkbox_callback
+        self.w.Symbol = vanilla.CheckBox(
+            (145, 66, 125, 22), "Symbol", sizeStyle="small", callback=self.checkbox_callback
         )
         self.w.All = vanilla.CheckBox(
             (285, 66, 60, 22), "All", sizeStyle="small", callback=self.checkbox_callback
@@ -135,6 +142,10 @@ class SpacingPairs:
         if self.w.UppervsLower.get():
             self.upper_lower()
             self.w.UppervsLower.set(False)
+        if self.w.Symbol.get():
+            self.symbol()
+            self.w.Symbol.set(False)
+
 
         # Functions:
     def uppercase_spacing(self):
@@ -151,10 +162,7 @@ class SpacingPairs:
 
     def figure_spacing(self):
         # Generate a formatted string for each figure by concatenating it with every digit from 1 to 9
-        result_string = "\n".join(
-            ["".join(character + str(num) for num in range(0, 10))
-             for character in FIGURES]
-        )
+        result_string = "\n".join(["".join(character + str(num) for num in range(0, 10)) for character in FIGURES])
 
         # Display the result string in a new font tab
         Font.newTab(result_string)
@@ -165,26 +173,21 @@ class SpacingPairs:
         "12" + character + " 23" + character + " 34" + character + " 45" + character + " 56" + character + " 67" + character + " 78" + character + " 89" + character + " 90" + character + " 01" + character if character == "\u00A2"
         else character + "12 " + character + "23 " + character + "34 " + character + "45 " + character + "56 " + character + "67 " + character + "78 " + character + "89 " + character + "90 " + character + "01"
         for character in SYMBOLS
-    	)
+        )
 
         # Display the result string in a new tab
         Font.newTab(result_string)
 
     def all_uppercase_spacing(self):
         # Generate the result string using nested comprehensions
-        result_string = "\n".join(
-            ["".join(character + other for other in uppercase) for character in UPPERCASE]
-        )
+        result_string = "\n".join(["".join(character + other for other in UPPERCASE) for character in UPPERCASE])
 
         # Display the result in a new font tab
         Font.newTab(result_string)
 
     def all_lowercase_spacing(self):
-
         # Generate the result string using nested comprehensions
-        result_string = "\n".join(
-            ["".join(character + other for other in LOWERCASE) for character in LOWERCASE]
-        )
+        result_string = "\n".join(["".join(character + other for other in LOWERCASE) for character in LOWERCASE])
 
         Font.newTab(result_string)
 
@@ -199,6 +202,12 @@ class SpacingPairs:
 
         # Open a new tab with all the combinations
         Font.newTab(all_combinations)
+
+    def symbol(self):
+        # Generate the result string using nested comprehensions
+        result_string = "\n".join(["".join(character + other for other in UPPERCASE) + character for character in FIRST_GROUP_PUNCTUATION[:4]])
+
+        Font.newTab(result_string)
 
 if __name__ == "__main__":
     SpacingPairs()
