@@ -211,7 +211,7 @@ class SpacingPairs:
 
         result_string_2 = "\n".join(["".join(character + other for other in FIGURES) + character for character in FIRST_GROUP_PUNCTUATION[:2]])
 
-        result_string_3 = "\n".join(["".join(character + other for other in UPPERCASE) + character for character in FIRST_GROUP_PUNCTUATION[2:4]])
+        result_string_3 = "\n".join([''.join([letter + punct + ' ' for letter in UPPERCASE]) for punct in FIRST_GROUP_PUNCTUATION[2:4]])
 
         Font.newTab(result_string + "\n" + result_string_1 + "\n" + result_string_2 + "\n" + result_string_3)
 
