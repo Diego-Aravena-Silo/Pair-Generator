@@ -142,9 +142,9 @@ class SpacingPairs:
         if self.w.UppervsLower.get():
             self.upper_lower()
             self.w.UppervsLower.set(False)
-        if self.w.Symbol.get():
-            self.symbol()
-            self.w.Symbol.set(False)
+        if self.w.Punctuation.get():
+            self.punctuation()
+            self.w.Punctuation.set(False)
 
 
         # Functions:
@@ -203,11 +203,15 @@ class SpacingPairs:
         # Open a new tab with all the combinations
         Font.newTab(all_combinations)
 
-    def symbol(self):
+    def punctuation(self):
         # Generate the result string using nested comprehensions
-        result_string = "\n".join(["".join(character + other for other in UPPERCASE) + character for character in FIRST_GROUP_PUNCTUATION[:4]])
+        result_string = "\n".join(["".join(character + other for other in UPPERCASE) + character for character in FIRST_GROUP_PUNCTUATION[:2]])
 
-        Font.newTab(result_string)
+        result_string_1 = "\n".join(["".join(character + other for other in LOWERCASE) + character for character in FIRST_GROUP_PUNCTUATION[:2]])
+
+        result_string_2 = "\n".join(["".join(character + other for other in FIGURES) + character for character in FIRST_GROUP_PUNCTUATION[:2]])
+
+        Font.newTab(result_string + "\n" + result_string_1 + "\n" + result_string_2)
 
 if __name__ == "__main__":
     SpacingPairs()
