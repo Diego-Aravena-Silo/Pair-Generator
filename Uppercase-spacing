@@ -26,13 +26,34 @@ for glyph in Glyphs.font.glyphs:
     my_dict[category][subcategory][unicode].append(glyph_name)
 
 try:
-    letter_values = my_dict['Letter'][None].values()
-    UPPERCASE = [item for sublist in letter_values for item in sublist if item == item.upper() and len(item) == 1]
-    LOWERCASE = [item for sublist in letter_values for item in sublist if item == item.lower() and len(item) == 1]
-    currency_unicode = my_dict['Symbol']['Currency'].keys()
-    SYMBOLS = [chr(int(code, 16)) for code in currency_unicode]
-except KeyError:
-    pass    
+    if 'Letter' in my_dict and None in my_dict['Letter']:
+        letter_values = my_dict['Letter'][None].values()
+        UPPERCASE = [item for sublist in letter_values for item in sublist if item.isupper() and len(item) == 1]
+        LOWERCASE = [item for sublist in letter_values for item in sublist if item.islower() and len(item) == 1]
+    else:
+        UPPERCASE, LOWERCASE = [], []
+
+    if 'Symbol' in my_dict and 'Currency' in my_dict['Symbol']:
+        currency_unicode = my_dict['Symbol']['Currency'].keys()
+        SYMBOLS = [chr(int(code, 16)) for code in currency_unicode]
+    else:
+        SYMBOLS = []
+
+    if 'Number' in my_dict and 'Decimal Digit' in my_dict['Number']:
+        figure_unicodes = my_dict['Number']['Decimal Digit'].keys()
+        FIGURES = [chr(int(code, 16)) for code in figure_unicodes if code != None and "00" in code]
+    else:
+        FIGURES = []
+
+except KeyError as e:
+    print(f"Key error: {e}")
+    UPPERCASE, LOWERCASE, SYMBOLS, FIGURES = [], [], [], []
+
+# Outputs for verification
+print("Uppercase letters:", UPPERCASE)
+print("Lowercase letters:", LOWERCASE)
+print("Currency symbols:", SYMBOLS)
+print("Figure characters:", FIGURES)
 
 class SpacingPairs:
 
@@ -129,13 +150,10 @@ class SpacingPairs:
         Font.newTab(result_string)
 
     def figure_spacing(self):
-        # List of figures (numeric characters 0-9)
-        figures = [chr(i) for i in range(48, 58)]
-
         # Generate a formatted string for each figure by concatenating it with every digit from 1 to 9
         result_string = "\n".join(
             ["".join(character + str(num) for num in range(0, 10))
-             for character in figures]
+             for character in FIGURES]
         )
 
         # Display the result string in a new font tab
