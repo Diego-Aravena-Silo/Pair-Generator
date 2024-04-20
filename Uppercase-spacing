@@ -1,10 +1,44 @@
 import vanilla
 
+# Initialize an empty dictionary
+my_dict = {}
+
+# First, group glyphs by category and subcategory
+for glyph in Glyphs.font.glyphs:
+    category = glyph.category
+    subcategory = glyph.subCategory
+    unicode = glyph.unicode  # Assuming there is a unicode attribute
+    glyph_name = glyph.name
+
+    # Check if the category key already exists in the dictionary
+    if category not in my_dict:
+        my_dict[category] = {}  # Initialize a new dictionary for this category if it doesn't exist
+
+    # Check if the subcategory key already exists in the category dictionary
+    if subcategory not in my_dict[category]:
+        my_dict[category][subcategory] = {}  # Initialize a new dictionary for this subcategory if it doesn't exist
+
+    # Check if the unicode key already exists in the subcategory dictionary
+    if unicode not in my_dict[category][subcategory]:
+        my_dict[category][subcategory][unicode] = []  # Initialize a new list for this unicode if it doesn't exist
+
+    # Append the glyph name to the appropriate list
+    my_dict[category][subcategory][unicode].append(glyph_name)
+
+try:
+    letter_values = my_dict['Letter'][None].values()
+    UPPERCASE = [item for sublist in letter_values for item in sublist if item == item.upper() and len(item) == 1]
+    LOWERCASE = [item for sublist in letter_values for item in sublist if item == item.lower() and len(item) == 1]
+    currency_unicode = my_dict['Symbol']['Currency'].keys()
+    SYMBOLS = [chr(int(code, 16)) for code in currency_unicode]
+except KeyError:
+    pass    
+
 class SpacingPairs:
 
     def __init__(self):
         self.windowWidth = 333
-        self.windowHeight = 100
+        self.windowHeight = 145
         self.windowWidthResize = 100  # user can resize width by this value
         self.windowHeightResize = 100  # user can resize height by this value
 
@@ -28,8 +62,26 @@ class SpacingPairs:
         self.w.currency = vanilla.CheckBox(
             (253, 15, 75, 22), "Currency", sizeStyle="small", callback=self.checkbox_callback
         )
+        self.w.allUpper = vanilla.CheckBox(
+            (15, 40, 90, 22), "All Uppercase", sizeStyle="small", callback=self.checkbox_callback
+        )
+        self.w.allLower = vanilla.CheckBox(
+            (118, 40, 90, 22), "All Lowercase", sizeStyle="small", callback=self.checkbox_callback
+        )
+        self.w.UppervsLower = vanilla.CheckBox(
+            (220, 40, 100, 22), "Upper vs Lower", sizeStyle="small", callback=self.checkbox_callback
+        )
+        self.w.PunctuationLetter = vanilla.CheckBox(
+            (15, 66, 115, 22), "Punctuation Letter", sizeStyle="small", callback=self.checkbox_callback
+        )
+        self.w.PunctuationNumber = vanilla.CheckBox(
+            (145, 66, 125, 22), "Punctuation Number", sizeStyle="small", callback=self.checkbox_callback
+        )
+        self.w.All = vanilla.CheckBox(
+            (285, 66, 60, 22), "All", sizeStyle="small", callback=self.checkbox_callback
+        )
         self.w.pairsButton = vanilla.Button(
-            (10, 50, -10, 22), "Generate", sizeStyle="regular", callback=self.button_callback
+            (10, 100, -10, 22), "Generate", sizeStyle="regular", callback=self.button_callback
         )
 
         self.w.open()  # Open the window
@@ -43,54 +95,92 @@ class SpacingPairs:
         # This method is called when the button is pressed.
         if self.w.uppercase.get():
             self.uppercase_spacing()
+            self.w.uppercase.set(False)
         if self.w.lowercase.get():
             self.lowercase_spacing()
+            self.w.lowercase.set(False)
         if self.w.number.get():
             self.figure_spacing()
+            self.w.number.set(False)
         if self.w.currency.get():
             self.currency_spacing()
+            self.w.currency.set(False)
+        if self.w.allUpper.get():
+            self.all_uppercase_spacing()
+            self.w.allUpper.set(False)
+        if self.w.allLower.get():
+            self.all_lowercase_spacing()
+            self.w.allLower.set(False)
+        if self.w.UppervsLower.get():
+            self.upper_lower()
+            self.w.UppervsLower.set(False)
 
+        # Functions:
     def uppercase_spacing(self):
-        # List of uppercase characters
-        uppercase = [chr(i) for i in range(65, 91)]
-
         # Concatenate all results into a single string
-        result_string = "\n".join(["HH" + character + "HH"+ " " "OO" + character + "OO" for character in uppercase])
+        result_string = "\n".join(["HH" + character + "HH"+ " " "OO" + character + "OO" for character in UPPERCASE])
 
         Font.newTab(result_string)
 
     def lowercase_spacing(self):
-        # List of lowercase characters
-        lowercase = [chr(i) for i in range(97, 123)]
-
         # Concatenate all results into a single string
-        result_string = "\n".join(["nn" + character + "nn"+ " " "oo" + character + "oo" for character in lowercase])
+        result_string = "\n".join(["nn" + character + "nn"+ " " "oo" + character + "oo" for character in LOWERCASE])
 
         Font.newTab(result_string)
 
     def figure_spacing(self):
-        # List of figures
+        # List of figures (numeric characters 0-9)
         figures = [chr(i) for i in range(48, 58)]
 
-        # Concatenate all results into a single string
-        result_string = "\n".join([character + "1" + character + "2" + character + "3" + character + "4" + character + "5" +     character + "6" + character + "7" + character + "8" + character + "9" + character for character in figures])
+        # Generate a formatted string for each figure by concatenating it with every digit from 1 to 9
+        result_string = "\n".join(
+            ["".join(character + str(num) for num in range(0, 10))
+             for character in figures]
+        )
 
-        # Display the result string in a new tab
+        # Display the result string in a new font tab
         Font.newTab(result_string)
 
-    def currency_spacing(self):
-        # List of currencies
-        currency = ["\u0192", "\u0E3F", "\u20BF", "\u00A2", "\u00A4", "\u0024", "\u20AC", "\u20B4", "\u20A4", "\u20BA", "\u20A7", "\u20BD", "\u20B9", "\u20AA", "\u00A3", "\u20B8", "\u20AE", "\u20A9", "\u00A5"]
-
+    def currency_spacing(self):    	
         # Concatenate all results into a single string
         result_string = "\n".join(
         "12" + character + " 23" + character + " 34" + character + " 45" + character + " 56" + character + " 67" + character + " 78" + character + " 89" + character + " 90" + character + " 01" + character if character == "\u00A2"
         else character + "12 " + character + "23 " + character + "34 " + character + "45 " + character + "56 " + character + "67 " + character + "78 " + character + "89 " + character + "90 " + character + "01"
-        for character in currency
+        for character in SYMBOLS
     	)
 
         # Display the result string in a new tab
         Font.newTab(result_string)
+
+    def all_uppercase_spacing(self):
+        # Generate the result string using nested comprehensions
+        result_string = "\n".join(
+            ["".join(character + other for other in uppercase) for character in UPPERCASE]
+        )
+
+        # Display the result in a new font tab
+        Font.newTab(result_string)
+
+    def all_lowercase_spacing(self):
+
+        # Generate the result string using nested comprehensions
+        result_string = "\n".join(
+            ["".join(character + other for other in LOWERCASE) for character in LOWERCASE]
+        )
+
+        Font.newTab(result_string)
+
+    def upper_lower(self):
+        # Initialize an empty string to hold all combinations
+        all_combinations = ""
+
+        # Create a combined string for each uppercase letter and append it to all_combinations
+        for upper in UPPERCASE:
+            combined_string = "".join([upper + char + "nnon " for char in LOWERCASE])
+            all_combinations += combined_string + "\n"  # Add a newline for each uppercase block
+
+        # Open a new tab with all the combinations
+        Font.newTab(all_combinations)
 
 if __name__ == "__main__":
     SpacingPairs()
