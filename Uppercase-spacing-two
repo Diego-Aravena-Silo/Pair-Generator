@@ -35,7 +35,7 @@ try:
 
     if 'Symbol' in my_dict and 'Currency' in my_dict['Symbol']:
         currency_unicode = my_dict['Symbol']['Currency'].keys()
-        SYMBOLS = [chr(int(code, 16)) for code in currency_unicode]
+        SYMBOLS = [chr(int(code, 16)) for code in currency_unicode if code != None]
     else:
         SYMBOLS = []
 
@@ -53,6 +53,11 @@ try:
     else:
         FIRST_GROUP_PUNCTUATION = []
 
+    if 'Punctuation' in my_dict and 'Quote' in my_dict['Punctuation']:
+        second_group_unicodes = my_dict['Punctuation']['Quote'].keys()
+        SECOND_GROUP_PUNCTUATION = [chr(int(code, 16)) for code in second_group_unicodes if code != None]
+
+
 except KeyError as e:
     print(f"Key error: {e}")
     UPPERCASE, LOWERCASE, SYMBOLS, FIGURES, FIRST_GROUP_PUNCTUATION = [], [], [], [], []
@@ -62,6 +67,7 @@ except KeyError as e:
 #print("Lowercase letters:", LOWERCASE)
 #print("Currency symbols:", SYMBOLS)
 #print("Figure characters:", FIGURES)
+print(SECOND_GROUP_PUNCTUATION)
 
 class SpacingPairs:
 
@@ -281,8 +287,28 @@ class SpacingPairs:
         else:
             concatenated_string_4 = ""
 
+        if "¿" in FIRST_GROUP_PUNCTUATION and "?" in FIRST_GROUP_PUNCTUATION:
+            result_string_upper = "".join("¿" + letter + "?" + " " for letter in UPPERCASE)
+            result_string_lower = "".join("¿" + letter + "?" + " " for letter in LOWERCASE)
+            concatenated_string_5 = result_string_upper + "\n" + result_string_lower + "\n"
+        else:
+            concatenated_string_5 = ""
 
-        Font.newTab(concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4)
+        if "¡" in FIRST_GROUP_PUNCTUATION and "!" in FIRST_GROUP_PUNCTUATION:
+            result_string_upper = "".join("¡" + letter + "!" + " " for letter in UPPERCASE)
+            result_string_lower = "".join("¡" + letter + "!" + " " for letter in LOWERCASE)
+            concatenated_string_6 = result_string_upper + "\n" + result_string_lower + "\n"
+        else:
+            concatenated_string_6 = ""
+
+        if "“" in SECOND_GROUP_PUNCTUATION and "”" in SECOND_GROUP_PUNCTUATION:
+            result_string_upper = "".join(letter + "“" + letter + "”" + letter + " " for letter in UPPERCASE)
+            result_string_lower = "".join(letter + "“" + letter + "”" + letter + " " for letter in LOWERCASE)
+            concatenated_string_7 = result_string_upper + "\n" + result_string_lower + "\n"
+        else:
+            concatenated_string_7 = ""
+
+        Font.newTab(concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4 + concatenated_string_5 + concatenated_string_6 + concatenated_string_7)
 
 if __name__ == "__main__":
     SpacingPairs()
