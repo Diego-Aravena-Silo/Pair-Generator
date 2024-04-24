@@ -63,7 +63,6 @@ except KeyError as e:
 #print("Currency symbols:", SYMBOLS)
 #print("Figure characters:", FIGURES)
 
-
 class SpacingPairs:
 
     def __init__(self):
@@ -227,27 +226,63 @@ class SpacingPairs:
 
     def punctuation(self):
         # Generate the result string using nested comprehensions
-        result_string = "\n".join(["".join(character + other for other in UPPERCASE) + character for character in FIRST_GROUP_PUNCTUATION[:2]])
+        if "." in FIRST_GROUP_PUNCTUATION:                
+            list_a = ["."]
+            result_string_upper = "\n".join(
+            ["".join(character + other for other in UPPERCASE) + character for character in list_a]
+            )
+            result_string_lower = "\n".join(
+            ["".join(character + other for other in LOWERCASE) + character for character in list_a]
+            )
+            concatenated_string = result_string_upper + "\n" + result_string_lower + "\n"
+        else:
+            concatenated_string = ""
 
-        result_string_1 = "\n".join(["".join(character + other for other in LOWERCASE) + character for character in FIRST_GROUP_PUNCTUATION[:2]])
+        if "," in FIRST_GROUP_PUNCTUATION:                
+            list_a = [","]
+            result_string_upper = "\n".join(
+            ["".join(character + other for other in UPPERCASE) + character for character in list_a]
+            )
+            result_string_lower = "\n".join(
+            ["".join(character + other for other in LOWERCASE) + character for character in list_a]
+            )
+            concatenated_string_1 = result_string_upper + "\n" + result_string_lower + "\n"
+        else:
+            concatenated_string_1 = ""            
 
-        result_string_2 = "\n".join(["".join(character + other for other in FIGURES) + character for character in FIRST_GROUP_PUNCTUATION[:2]])
+        if ":" in FIRST_GROUP_PUNCTUATION:                
+            list_a = [":"]
+            result_string_upper = "\n".join(
+            [''.join([letter + punct + ' ' for letter in UPPERCASE]) for punct in list_a]
+            )
+            result_string_lower = "\n".join(
+            [''.join([letter + punct + ' ' for letter in LOWERCASE]) for punct in list_a]
+            )
+            concatenated_string_2 = result_string_upper + "\n" + result_string_lower + "\n"
+        else:
+            concatenated_string_2 = ""
 
-        result_string_3 = "\n".join([''.join([letter + punct + ' ' for letter in UPPERCASE]) for punct in FIRST_GROUP_PUNCTUATION[2:4]])
-
-        result_string_4 = "\n".join([''.join([letter + punct + ' ' for letter in LOWERCASE]) for punct in FIRST_GROUP_PUNCTUATION[2:4]])
+        if ";" in FIRST_GROUP_PUNCTUATION:                
+            list_a = [";"]
+            result_string_upper = "\n".join(
+            [''.join([letter + punct + ' ' for letter in UPPERCASE]) for punct in list_a]
+            )
+            result_string_lower = "\n".join(
+            [''.join([letter + punct + ' ' for letter in LOWERCASE]) for punct in list_a]
+            )
+            concatenated_string_3 = result_string_upper + "\n" + result_string_lower + "\n"
+        else:
+            concatenated_string_3 = ""
 
         if "//" in FIRST_GROUP_PUNCTUATION and "\\" in FIRST_GROUP_PUNCTUATION:
-            result_string_5 = "".join(letter + "//" + letter + "\\" + letter + " " for letter in LOWERCASE)
+            result_string_lower = "".join(letter + "//" + letter + "\\" + letter + " " for letter in LOWERCASE)
+            result_string_upper = "".join(letter + "//" + letter + "\\" + letter + " " for letter in LOWERCASE)
+            concatenated_string_4 = result_string_lower + "\n" + result_string_upper + "\n"
         else:
-            result_string_5 = "Slash and or Backslash missing"
+            concatenated_string_4 = ""
 
-        if "//" in FIRST_GROUP_PUNCTUATION and "\\" in FIRST_GROUP_PUNCTUATION:
-            result_string_6 = "".join(letter + "//" + letter + "\\" + letter + " " for letter in UPPERCASE)
-        else:
-            result_string_6 = "Slash and or Backslash missing"
 
-        Font.newTab(result_string + "\n" + result_string_1 + "\n" + result_string_2 + "\n" + result_string_3 + "\n" + result_string_4 + "\n" + result_string_5 + "\n" + result_string_6)
+        Font.newTab(concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4)
 
 if __name__ == "__main__":
     SpacingPairs()
