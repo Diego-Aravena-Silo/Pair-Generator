@@ -26,10 +26,43 @@ for glyph in Glyphs.font.glyphs:
     my_dict[category][subcategory][unicode].append(glyph_name)
 
 try:
-    currency_unicode = my_dict['Symbol']['Currency'].keys()
-    symbols = [chr(int(code, 16)) for code in currency_unicode]
-except KeyError:
-    pass
+    if 'Letter' in my_dict and None in my_dict['Letter']:
+        letter_values = my_dict['Letter'][None].values()
+        UPPERCASE = [item for sublist in letter_values for item in sublist if item.isupper() and len(item) == 1]
+        LOWERCASE = [item for sublist in letter_values for item in sublist if item.islower() and len(item) == 1]
+    else:
+        UPPERCASE, LOWERCASE = [], []
+
+    if 'Symbol' in my_dict and 'Currency' in my_dict['Symbol']:
+        currency_unicode = my_dict['Symbol']['Currency'].keys()
+        SYMBOLS = [chr(int(code, 16)) for code in currency_unicode]
+    else:
+        SYMBOLS = []
+
+    if 'Number' in my_dict and 'Decimal Digit' in my_dict['Number']:
+        figure_unicodes = my_dict['Number']['Decimal Digit'].keys()
+        FIGURES = [chr(int(code, 16)) for code in figure_unicodes if code != None and "00" in code]
+    else:
+        FIGURES = []
+
+    if 'Punctuation' in my_dict and None in my_dict['Punctuation']:
+        first_group_unicodes = my_dict['Punctuation'][None].keys()
+        FIRST_GROUP_PUNCTUATION = [chr(int(code, 16)) for code in first_group_unicodes if code != None]
+        if "/" in FIRST_GROUP_PUNCTUATION:
+            FIRST_GROUP_PUNCTUATION = ['//' if item == '/' else item for item in FIRST_GROUP_PUNCTUATION]
+    else:
+        FIRST_GROUP_PUNCTUATION = []
+
+except KeyError as e:
+    print(f"Key error: {e}")
+    UPPERCASE, LOWERCASE, SYMBOLS, FIGURES, FIRST_GROUP_PUNCTUATION = [], [], [], [], []
+
+# Outputs for verification
+#print("Uppercase letters:", UPPERCASE)
+#print("Lowercase letters:", LOWERCASE)
+#print("Currency symbols:", SYMBOLS)
+#print("Figure characters:", FIGURES)
+
 
 class SpacingPairs:
 
@@ -68,11 +101,11 @@ class SpacingPairs:
         self.w.UppervsLower = vanilla.CheckBox(
             (220, 40, 100, 22), "Upper vs Lower", sizeStyle="small", callback=self.checkbox_callback
         )
-        self.w.PunctuationLetter = vanilla.CheckBox(
-            (15, 66, 115, 22), "Punctuation Letter", sizeStyle="small", callback=self.checkbox_callback
+        self.w.Punctuation = vanilla.CheckBox(
+            (15, 66, 115, 22), "Punctuation", sizeStyle="small", callback=self.checkbox_callback
         )
-        self.w.PunctuationNumber = vanilla.CheckBox(
-            (145, 66, 125, 22), "Punctuation Number", sizeStyle="small", callback=self.checkbox_callback
+        self.w.Symbol = vanilla.CheckBox(
+            (145, 66, 125, 22), "Symbol", sizeStyle="small", callback=self.checkbox_callback
         )
         self.w.All = vanilla.CheckBox(
             (285, 66, 60, 22), "All", sizeStyle="small", callback=self.checkbox_callback
@@ -111,93 +144,110 @@ class SpacingPairs:
         if self.w.UppervsLower.get():
             self.upper_lower()
             self.w.UppervsLower.set(False)
+        if self.w.Punctuation.get():
+            self.punctuation()
+            self.w.Punctuation.set(False)
 
-        # Functions:
+    # Functions:
     def uppercase_spacing(self):
-        # List of uppercase characters
-        uppercase = [chr(i) for i in range(65, 91)]
+        if UPPERCASE == []:
+            pass
+        else:
+            # Concatenate all results into a single string
+            result_string = "\n".join(["HH" + character + "HH"+ " " "OO" + character + "OO" for character in UPPERCASE])
 
-        # Concatenate all results into a single string
-        result_string = "\n".join(["HH" + character + "HH"+ " " "OO" + character + "OO" for character in uppercase])
-
-        Font.newTab(result_string)
+            Font.newTab(result_string)
 
     def lowercase_spacing(self):
-        # List of lowercase characters
-        lowercase = [chr(i) for i in range(97, 123)]
+        if LOWERCASE == []:
+            pass
+        else:
+            # Concatenate all results into a single string
+            result_string = "\n".join(["nn" + character + "nn"+ " " "oo" + character + "oo" for character in LOWERCASE])
 
-        # Concatenate all results into a single string
-        result_string = "\n".join(["nn" + character + "nn"+ " " "oo" + character + "oo" for character in lowercase])
-
-        Font.newTab(result_string)
+            Font.newTab(result_string)
 
     def figure_spacing(self):
-        # List of figures (numeric characters 0-9)
-        figures = [chr(i) for i in range(48, 58)]
+        if FIGURES == []:
+            pass
+        else:
+            # Generate a formatted string for each figure by concatenating it with every digit from 1 to 9
+            result_string = "\n".join(["".join(figure + str(num) for num in range(0, 10)) for figure in FIGURES])
 
-        # Generate a formatted string for each figure by concatenating it with every digit from 1 to 9
-        result_string = "\n".join(
-            ["".join(character + str(num) for num in range(0, 10))
-             for character in figures]
-        )
-
-        # Display the result string in a new font tab
-        Font.newTab(result_string)
+            # Display the result string in a new font tab
+            Font.newTab(result_string)
 
     def currency_spacing(self):
-        # List of currencies
-        currency = [chr(int(code, 16)) for code in currency_unicode]
+        if SYMBOLS == []:
+            pass
+        else:
+            figure_order = ["12","23","34","45","56","65","78","89","90","01"]
+            # Concatenate all results into a single string
+            result_string = "\n".join(
+            ["".join(figure + symbol + " " for figure in figure_order) if symbol == "\u00A2"
+            else "".join(symbol + figure + " " for figure in figure_order) for symbol in SYMBOLS]
+            )
 
-        # Concatenate all results into a single string
-        result_string = "\n".join(
-        "12" + character + " 23" + character + " 34" + character + " 45" + character + " 56" + character + " 67" + character + " 78" + character + " 89" + character + " 90" + character + " 01" + character if character == "\u00A2"
-        else character + "12 " + character + "23 " + character + "34 " + character + "45 " + character + "56 " + character + "67 " + character + "78 " + character + "89 " + character + "90 " + character + "01"
-        for character in currency
-    	)
-
-        # Display the result string in a new tab
-        Font.newTab(result_string)
+            # Display the result string in a new tab
+            Font.newTab(result_string)
 
     def all_uppercase_spacing(self):
-        # List of uppercase characters generated directly from ASCII values
-        uppercase = [chr(i) for i in range(65, 91)]
+        if UPPERCASE == []:
+            pass
+        else:
+            # Generate the result string using nested comprehensions
+            result_string = "\n".join(["".join(character + other for other in UPPERCASE) for character in UPPERCASE])
 
-        # Generate the result string using nested comprehensions
-        result_string = "\n".join(
-            ["".join(character + other for other in uppercase) for character in uppercase]
-        )
-
-        # Display the result in a new font tab
-        Font.newTab(result_string)
+            # Display the result in a new font tab
+            Font.newTab(result_string)
 
     def all_lowercase_spacing(self):
-        # List of lowercase characters
-        lowercase = [chr(i) for i in range(97, 123)]
+        if LOWERCASE == []:
+            pass
+        else:
+            # Generate the result string using nested comprehensions
+            result_string = "\n".join(["".join(character + other for other in LOWERCASE) for character in LOWERCASE])
 
-        # Generate the result string using nested comprehensions
-        result_string = "\n".join(
-            ["".join(character + other for other in lowercase) for character in lowercase]
-        )
-
-        Font.newTab(result_string)
+            Font.newTab(result_string)
 
     def upper_lower(self):
-        # List of lowercase characters
-        lowercase = [chr(i) for i in range(97, 123)]
+        if UPPERCASE == [] or LOWERCASE == []:
+            pass
+        else:
+            # Initialize an empty string to hold all combinations
+            all_combinations = ""
 
-        # List of uppercase characters
-        uppercase = [chr(i) for i in range(65, 91)]
+            # Create a combined string for each uppercase letter and append it to all_combinations
+            for upper in UPPERCASE:
+                combined_string = "".join([upper + character + "nnon " for character in LOWERCASE])
+                all_combinations += combined_string + "\n"  # Add a newline for each uppercase block
 
-        # Initialize an empty string to hold all combinations
-        all_combinations = ""
+            # Open a new tab with all the combinations
+            Font.newTab(all_combinations)
 
-        # Create a combined string for each uppercase letter and append it to all_combinations
-        for upper in uppercase:
-            combined_string = "".join([upper + char + "nnon " for char in lowercase])
-            all_combinations += combined_string + "\n"  # Add a newline for each uppercase block
+    def punctuation(self):
+        # Generate the result string using nested comprehensions
+        result_string = "\n".join(["".join(character + other for other in UPPERCASE) + character for character in FIRST_GROUP_PUNCTUATION[:2]])
 
-        # Open a new tab with all the combinations
-        Font.newTab(all_combinations)
+        result_string_1 = "\n".join(["".join(character + other for other in LOWERCASE) + character for character in FIRST_GROUP_PUNCTUATION[:2]])
+
+        result_string_2 = "\n".join(["".join(character + other for other in FIGURES) + character for character in FIRST_GROUP_PUNCTUATION[:2]])
+
+        result_string_3 = "\n".join([''.join([letter + punct + ' ' for letter in UPPERCASE]) for punct in FIRST_GROUP_PUNCTUATION[2:4]])
+
+        result_string_4 = "\n".join([''.join([letter + punct + ' ' for letter in LOWERCASE]) for punct in FIRST_GROUP_PUNCTUATION[2:4]])
+
+        if "//" in FIRST_GROUP_PUNCTUATION and "\\" in FIRST_GROUP_PUNCTUATION:
+            result_string_5 = "".join(letter + "//" + letter + "\\" + letter + " " for letter in LOWERCASE)
+        else:
+            result_string_5 = "Slash and or Backslash missing"
+
+        if "//" in FIRST_GROUP_PUNCTUATION and "\\" in FIRST_GROUP_PUNCTUATION:
+            result_string_6 = "".join(letter + "//" + letter + "\\" + letter + " " for letter in UPPERCASE)
+        else:
+            result_string_6 = "Slash and or Backslash missing"
+
+        Font.newTab(result_string + "\n" + result_string_1 + "\n" + result_string_2 + "\n" + result_string_3 + "\n" + result_string_4 + "\n" + result_string_5 + "\n" + result_string_6)
 
 if __name__ == "__main__":
     SpacingPairs()
