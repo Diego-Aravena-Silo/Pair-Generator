@@ -53,14 +53,13 @@ try:
 
 except KeyError as e:
     print(f"Key error: {e}")
-    UPPERCASE, LOWERCASE, SYMBOLS, FIGURES = [], [], [], []
+    UPPERCASE, LOWERCASE, SYMBOLS, FIGURES, FIRST_GROUP_PUNCTUATION = [], [], [], [], []
 
 # Outputs for verification
 #print("Uppercase letters:", UPPERCASE)
 #print("Lowercase letters:", LOWERCASE)
 #print("Currency symbols:", SYMBOLS)
 #print("Figure characters:", FIGURES)
-print(FIRST_GROUP_PUNCTUATION)
 
 class SpacingPairs:
 
@@ -146,7 +145,6 @@ class SpacingPairs:
             self.punctuation()
             self.w.Punctuation.set(False)
 
-
         # Functions:
     def uppercase_spacing(self):
         # Concatenate all results into a single string
@@ -162,17 +160,17 @@ class SpacingPairs:
 
     def figure_spacing(self):
         # Generate a formatted string for each figure by concatenating it with every digit from 1 to 9
-        result_string = "\n".join(["".join(character + str(num) for num in range(0, 10)) for character in FIGURES])
+        result_string = "\n".join(["".join(figure + str(num) for num in range(0, 10)) for figure in FIGURES])
 
         # Display the result string in a new font tab
         Font.newTab(result_string)
 
-    def currency_spacing(self):    	
+    def currency_spacing(self):
+        figure_order = ["12","23","34","45","56","65","78","89","90","01"]
         # Concatenate all results into a single string
         result_string = "\n".join(
-        "12" + character + " 23" + character + " 34" + character + " 45" + character + " 56" + character + " 67" + character + " 78" + character + " 89" + character + " 90" + character + " 01" + character if character == "\u00A2"
-        else character + "12 " + character + "23 " + character + "34 " + character + "45 " + character + "56 " + character + "67 " + character + "78 " + character + "89 " + character + "90 " + character + "01"
-        for character in SYMBOLS
+        ["".join(figure + symbol + " " for figure in figure_order) if symbol == "\u00A2"
+        else "".join(symbol + figure + " " for figure in figure_order) for symbol in SYMBOLS]
         )
 
         # Display the result string in a new tab
@@ -197,7 +195,7 @@ class SpacingPairs:
 
         # Create a combined string for each uppercase letter and append it to all_combinations
         for upper in UPPERCASE:
-            combined_string = "".join([upper + char + "nnon " for char in LOWERCASE])
+            combined_string = "".join([upper + character + "nnon " for character in LOWERCASE])
             all_combinations += combined_string + "\n"  # Add a newline for each uppercase block
 
         # Open a new tab with all the combinations
@@ -213,7 +211,11 @@ class SpacingPairs:
 
         result_string_3 = "\n".join([''.join([letter + punct + ' ' for letter in UPPERCASE]) for punct in FIRST_GROUP_PUNCTUATION[2:4]])
 
-        Font.newTab(result_string + "\n" + result_string_1 + "\n" + result_string_2 + "\n" + result_string_3)
+        result_string_4 = "\n".join([''.join([letter + punct + ' ' for letter in LOWERCASE]) for punct in FIRST_GROUP_PUNCTUATION[2:4]])
+
+        result_string_5 = "\n".join([''.join([letter + punct for letter in LOWERCASE]) for punct in FIRST_GROUP_PUNCTUATION])
+
+        Font.newTab(result_string + "\n" + result_string_1 + "\n" + result_string_2 + "\n" + result_string_3 + "\n" + result_string_4 + "\n" + result_string_5)
 
 if __name__ == "__main__":
     SpacingPairs()
