@@ -48,6 +48,8 @@ try:
     if 'Punctuation' in my_dict and None in my_dict['Punctuation']:
         first_group_unicodes = my_dict['Punctuation'][None].keys()
         FIRST_GROUP_PUNCTUATION = [chr(int(code, 16)) for code in first_group_unicodes if code != None]
+        if "/" in FIRST_GROUP_PUNCTUATION:
+            FIRST_GROUP_PUNCTUATION = ['//' if item == '/' else item for item in FIRST_GROUP_PUNCTUATION]
     else:
         FIRST_GROUP_PUNCTUATION = []
 
@@ -213,7 +215,7 @@ class SpacingPairs:
 
         result_string_4 = "\n".join([''.join([letter + punct + ' ' for letter in LOWERCASE]) for punct in FIRST_GROUP_PUNCTUATION[2:4]])
 
-        result_string_5 = "\n".join([''.join([letter + punct for letter in LOWERCASE]) for punct in FIRST_GROUP_PUNCTUATION])
+        result_string_5 = "".join(f"{letter}{FIRST_GROUP_PUNCTUATION[-2]}{letter}{FIRST_GROUP_PUNCTUATION[-1]}{letter}" + " " for letter in LOWERCASE)
 
         Font.newTab(result_string + "\n" + result_string_1 + "\n" + result_string_2 + "\n" + result_string_3 + "\n" + result_string_4 + "\n" + result_string_5)
 
