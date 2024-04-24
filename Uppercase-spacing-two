@@ -308,7 +308,16 @@ class SpacingPairs:
         else:
             concatenated_string_7 = ""
 
-        Font.newTab(concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4 + concatenated_string_5 + concatenated_string_6 + concatenated_string_7)
+        if "‘" in SECOND_GROUP_PUNCTUATION and "’" in SECOND_GROUP_PUNCTUATION:
+            result_string_upper = "".join(letter + "‘" + letter + "’" + letter + " " for letter in UPPERCASE)
+            result_string_lower = "".join(letter + "‘" + letter + "’" + letter + " " for letter in LOWERCASE)
+            result_string_extra_upper = "".join(letter + "’" for letter in UPPERCASE)
+            result_string_extra_lower = "".join(letter + "’" for letter in LOWERCASE)
+            concatenated_string_8 = result_string_upper + "\n" + result_string_lower + "\n" + result_string_extra_upper + "\n" + result_string_extra_lower + "\n"
+        else:
+            concatenated_string_8 = ""
+
+        Font.newTab(concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4 + concatenated_string_5 + concatenated_string_6 + concatenated_string_7 + concatenated_string_8)
 
 if __name__ == "__main__":
     SpacingPairs()
