@@ -28,16 +28,16 @@ for glyph in Glyphs.font.glyphs:
 try:
     if 'Letter' in my_dict and None in my_dict['Letter']:
         letter_values = my_dict['Letter'][None].values()
-        UPPERCASE = [item for sublist in letter_values for item in sublist if item.isupper() and len(item) == 1]
-        LOWERCASE = [item for sublist in letter_values for item in sublist if item.islower() and len(item) == 1]
+        UPPERCASES = [item for sublist in letter_values for item in sublist if item.isupper() and len(item) == 1]
+        LOWERCASES = [item for sublist in letter_values for item in sublist if item.islower() and len(item) == 1]
     else:
-        UPPERCASE, LOWERCASE = [], []
+        UPPERCASES, LOWERCASES = [], []
 
     if 'Symbol' in my_dict and 'Currency' in my_dict['Symbol']:
         currency_unicode = my_dict['Symbol']['Currency'].keys()
-        SYMBOLS = [chr(int(code, 16)) for code in currency_unicode]
+        CURRENCIES = [chr(int(code, 16)) for code in currency_unicode if code != None]
     else:
-        SYMBOLS = []
+        CURRENCIES = []
 
     if 'Number' in my_dict and 'Decimal Digit' in my_dict['Number']:
         figure_unicodes = my_dict['Number']['Decimal Digit'].keys()
@@ -47,21 +47,36 @@ try:
 
     if 'Punctuation' in my_dict and None in my_dict['Punctuation']:
         first_group_unicodes = my_dict['Punctuation'][None].keys()
-        FIRST_GROUP_PUNCTUATION = [chr(int(code, 16)) for code in first_group_unicodes if code != None]
-        if "/" in FIRST_GROUP_PUNCTUATION:
-            FIRST_GROUP_PUNCTUATION = ['//' if item == '/' else item for item in FIRST_GROUP_PUNCTUATION]
+        FIRST_GROUP_PUNCTUATIONS = [chr(int(code, 16)) for code in first_group_unicodes if code != None]
+        if "/" in FIRST_GROUP_PUNCTUATIONS:
+            FIRST_GROUP_PUNCTUATIONS = ['//' if item == '/' else item for item in FIRST_GROUP_PUNCTUATION]
     else:
-        FIRST_GROUP_PUNCTUATION = []
+        FIRST_GROUP_PUNCTUATIONS = []
+
+    if 'Punctuation' in my_dict and 'Quote' in my_dict['Punctuation']:
+        second_group_unicodes = my_dict['Punctuation']['Quote'].keys()
+        SECOND_GROUP_PUNCTUATIONS = [chr(int(code, 16)) for code in second_group_unicodes if code != None]
+    else:
+        SECOND_GROUP_PUNCTUATIONS = []
+ 
+    if 'Punctuation' in my_dict and 'Parenthesis' in my_dict['Punctuation']:
+        third_group_unicodes = my_dict['Punctuation']['Parenthesis'].keys()
+        THIRD_GROUP_PUNCTUATIONS = [chr(int(code, 16)) for code in third_group_unicodes if code != None]
+    else:
+        THIRD_GROUP_PUNCTUATIONS = []
+
+    if 'Symbol' in my_dict and None in my_dict['Symbol']:
+        symbol_unicodes = my_dict["Symbol"][None].keys()
+        SYMBOLS = [chr(int(code, 16)) for code in symbol_unicodes if code != None]
+    else:
+        SYMBOLS = []
+
 
 except KeyError as e:
     print(f"Key error: {e}")
-    UPPERCASE, LOWERCASE, SYMBOLS, FIGURES, FIRST_GROUP_PUNCTUATION = [], [], [], [], []
+    UPPERCASES, LOWERCASES, CURRENCIES, FIGURES, FIRST_GROUP_PUNCTUATIONS, SECOND_GROUP_PUNCTUATIONS, THIRD_GROUP_PUNCTUATIONS, SYMBOLS = [], [], [], [], [], [], [], []
 
-# Outputs for verification
-#print("Uppercase letters:", UPPERCASE)
-#print("Lowercase letters:", LOWERCASE)
-#print("Currency symbols:", SYMBOLS)
-#print("Figure characters:", FIGURES)
+print(my_dict["Symbol"][None])
 
 class SpacingPairs:
 
@@ -146,78 +161,217 @@ class SpacingPairs:
         if self.w.Punctuation.get():
             self.punctuation()
             self.w.Punctuation.set(False)
+        if self.w.Symbol.get():
+            self.symbol()
+            self.w.Symbol.set(False)
 
-        # Functions:
+    # Functions:
     def uppercase_spacing(self):
-        # Concatenate all results into a single string
-        result_string = "\n".join(["HH" + character + "HH"+ " " "OO" + character + "OO" for character in UPPERCASE])
+        if UPPERCASES == []:
+            pass
+        else:
+            # Concatenate all results into a single string
+            result_string = "\n".join(["HH" + uppercase + "HH"+ " " "OO" + uppercase + "OO" for uppercase in UPPERCASES])
 
-        Font.newTab(result_string)
+            Font.newTab(result_string)
 
     def lowercase_spacing(self):
-        # Concatenate all results into a single string
-        result_string = "\n".join(["nn" + character + "nn"+ " " "oo" + character + "oo" for character in LOWERCASE])
+        if LOWERCASES == []:
+            pass
+        else:
+            # Concatenate all results into a single string
+            result_string = "\n".join(["nn" + lowercase + "nn"+ " " "oo" + lowercase + "oo" for lowercase in LOWERCASES])
 
-        Font.newTab(result_string)
+            Font.newTab(result_string)
 
     def figure_spacing(self):
-        # Generate a formatted string for each figure by concatenating it with every digit from 1 to 9
-        result_string = "\n".join(["".join(figure + str(num) for num in range(0, 10)) for figure in FIGURES])
+        if FIGURES == []:
+            pass
+        else:
+            # Generate a formatted string for each figure by concatenating it with every digit from 1 to 9
+            result_string = "\n".join(["".join(figure + str(num) for num in range(0, 10)) for figure in FIGURES])
 
-        # Display the result string in a new font tab
-        Font.newTab(result_string)
+            # Display the result string in a new font tab
+            Font.newTab(result_string)
 
     def currency_spacing(self):
-        figure_order = ["12","23","34","45","56","65","78","89","90","01"]
-        # Concatenate all results into a single string
-        result_string = "\n".join(
-        ["".join(figure + symbol + " " for figure in figure_order) if symbol == "\u00A2"
-        else "".join(symbol + figure + " " for figure in figure_order) for symbol in SYMBOLS]
-        )
+        if CURRENCIES == []:
+            pass
+        else:
+            figure_order = ["12","23","34","45","56","65","78","89","90","01"]
+            # Concatenate all results into a single string
+            result_string = "\n".join(
+            ["".join(figure + currency + " " for figure in figure_order) if currency == "\u00A2"
+            else "".join(currency + figure + " " for figure in figure_order) for currency in CURRENCIES]
+            )
 
-        # Display the result string in a new tab
-        Font.newTab(result_string)
+            # Display the result string in a new tab
+            Font.newTab(result_string)
 
     def all_uppercase_spacing(self):
-        # Generate the result string using nested comprehensions
-        result_string = "\n".join(["".join(character + other for other in UPPERCASE) for character in UPPERCASE])
+        if UPPERCASES == []:
+            pass
+        else:
+            # Generate the result string using nested comprehensions
+            result_string = "\n".join(["".join(uppercase + other for other in UPPERCASES) for uppercase in UPPERCASES])
 
-        # Display the result in a new font tab
-        Font.newTab(result_string)
+            # Display the result in a new font tab
+            Font.newTab(result_string)
 
     def all_lowercase_spacing(self):
-        # Generate the result string using nested comprehensions
-        result_string = "\n".join(["".join(character + other for other in LOWERCASE) for character in LOWERCASE])
+        if LOWERCASES == []:
+            pass
+        else:
+            # Generate the result string using nested comprehensions
+            result_string = "\n".join(["".join(lowercase + other for other in LOWERCASES) for lowercase in LOWERCASES])
 
-        Font.newTab(result_string)
+            Font.newTab(result_string)
 
     def upper_lower(self):
-        # Initialize an empty string to hold all combinations
-        all_combinations = ""
+        if UPPERCASES == [] or LOWERCASES == []:
+            pass
+        else:
+            # Initialize an empty string to hold all combinations
+            all_combinations = ""
 
-        # Create a combined string for each uppercase letter and append it to all_combinations
-        for upper in UPPERCASE:
-            combined_string = "".join([upper + character + "nnon " for character in LOWERCASE])
-            all_combinations += combined_string + "\n"  # Add a newline for each uppercase block
+            # Create a combined string for each uppercase letter and append it to all_combinations
+            for uppercase in UPPERCASES:
+                combined_string = "".join([uppercase + lowercase + "nnon " for lowercase in LOWERCASES])
+                all_combinations += combined_string + "\n"  # Add a newline for each uppercase block
 
-        # Open a new tab with all the combinations
-        Font.newTab(all_combinations)
+            # Open a new tab with all the combinations
+            Font.newTab(all_combinations)
 
     def punctuation(self):
-        # Generate the result string using nested comprehensions
-        result_string = "\n".join(["".join(character + other for other in UPPERCASE) + character for character in FIRST_GROUP_PUNCTUATION[:2]])
+        if FIRST_GROUP_PUNCTUATIONS == [] and SECOND_GROUP_PUNCTUATIONS == [] and THIRD_GROUP_PUNCTUATIONS == []:
+            pass
+        else:
+            # Generate the result string using nested comprehensions
+            if "." in FIRST_GROUP_PUNCTUATIONS:
+                list_a = ["."]
+                result_string_upper = "\n".join(
+                    ["".join(character + other for other in UPPERCASES) + character for character in list_a]
+                )
+                result_string_lower = "\n".join(
+                    ["".join(character + other for other in LOWERCASES) + character for character in list_a]
+                )
+                concatenated_string = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string = ""
+    
+            if "," in FIRST_GROUP_PUNCTUATIONS:
+                list_a = [","]
+                result_string_upper = "\n".join(
+                    ["".join(character + other for other in UPPERCASES) + character for character in list_a]
+                )
+                result_string_lower = "\n".join(
+                    ["".join(character + other for other in LOWERCASES) + character for character in list_a]
+                )
+                concatenated_string_1 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_1 = ""
+    
+            if ":" in FIRST_GROUP_PUNCTUATIONS:
+                list_a = [":"]
+                result_string_upper = "\n".join(
+                    [''.join([letter + punct + ' ' for letter in UPPERCASES]) for punct in list_a]
+                )
+                result_string_lower = "\n".join(
+                    [''.join([letter + punct + ' ' for letter in LOWERCASES]) for punct in list_a]
+                )
+                concatenated_string_2 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_2 = ""
+    
+            if ";" in FIRST_GROUP_PUNCTUATIONS:
+                list_a = [";"]
+                result_string_upper = "\n".join(
+                    [''.join([letter + punct + ' ' for letter in UPPERCASES]) for punct in list_a]
+                )
+                result_string_lower = "\n".join(
+                    [''.join([letter + punct + ' ' for letter in LOWERCASES]) for punct in list_a]
+                )
+                concatenated_string_3 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_3 = ""
+    
+            if "//" in FIRST_GROUP_PUNCTUATIONS and "\\" in FIRST_GROUP_PUNCTUATIONS:
+                result_string_lower = "".join(letter + "//" + letter + "\\" + letter + " " for letter in LOWERCASES)
+                result_string_upper = "".join(letter + "//" + letter + "\\" + letter + " " for letter in UPPERCASES)
+                concatenated_string_4 = result_string_lower + "\n" + result_string_upper + "\n"
+            else:
+                concatenated_string_4 = ""
+    
+            if "¿" in FIRST_GROUP_PUNCTUATIONS and "?" in FIRST_GROUP_PUNCTUATIONS:
+                result_string_upper = "".join("¿" + letter + "?" + " " for letter in UPPERCASES)
+                result_string_lower = "".join("¿" + letter + "?" + " " for letter in LOWERCASES)
+                concatenated_string_5 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_5 = ""
+    
+            if "¡" in FIRST_GROUP_PUNCTUATIONS and "!" in FIRST_GROUP_PUNCTUATIONS:
+                result_string_upper = "".join("¡" + letter + "!" + " " for letter in UPPERCASES)
+                result_string_lower = "".join("¡" + letter + "!" + " " for letter in LOWERCASES)
+                concatenated_string_6 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_6 = ""
+    
+            if "“" in SECOND_GROUP_PUNCTUATIONS and "”" in SECOND_GROUP_PUNCTUATIONS:
+                result_string_upper = "".join(letter + "“" + letter + "”" + letter + " " for letter in UPPERCASES)
+                result_string_lower = "".join(letter + "“" + letter + "”" + letter + " " for letter in LOWERCASES)
+                concatenated_string_7 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_7 = ""
+    
+            if "‘" in SECOND_GROUP_PUNCTUATIONS and "’" in SECOND_GROUP_PUNCTUATIONS:
+                result_string_upper = "".join(letter + "‘" + letter + "’" + letter + " " for letter in UPPERCASES)
+                result_string_lower = "".join(letter + "‘" + letter + "’" + letter + " " for letter in LOWERCASES)
+                result_string_extra_upper = "".join(letter + "’" for letter in UPPERCASES)
+                result_string_extra_lower = "".join(letter + "’" for letter in LOWERCASES)
+                concatenated_string_8 = result_string_upper + "\n" + result_string_lower + "\n" + result_string_extra_upper + "\n" + result_string_extra_lower + "\n"
+            else:
+                concatenated_string_8 = ""
+    
+            if "«" in SECOND_GROUP_PUNCTUATIONS and "»" in SECOND_GROUP_PUNCTUATIONS:
+                result_string_upper = "".join(letter + "«" + letter + "»" + letter + " " for letter in UPPERCASES)
+                result_string_lower = "".join(letter + "«" + letter + "»" + letter + " " for letter in LOWERCASES)
+                concatenated_string_9 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_9 = ""
+    
+            if "‹" in SECOND_GROUP_PUNCTUATIONS and "›" in SECOND_GROUP_PUNCTUATIONS:
+                result_string_upper = "".join(letter + "‹" + letter + "›" + letter + " " for letter in UPPERCASES)
+                result_string_lower = "".join(letter + "‹" + letter + "›" + letter + " " for letter in LOWERCASES)
+                concatenated_string_10 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_10 = ""
+    
+            if "(" in THIRD_GROUP_PUNCTUATIONS and ")" in THIRD_GROUP_PUNCTUATIONS:
+                result_string_upper = "".join("(" + letter + ")" + " " for letter in UPPERCASES)
+                result_string_lower = "".join("(" + letter + ")" + " " for letter in LOWERCASES)
+                concatenated_string_11 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_11 = ""
+    
+            if "{" in THIRD_GROUP_PUNCTUATIONS and "}" in THIRD_GROUP_PUNCTUATIONS:
+                result_string_upper = "".join("{" + letter + "}" + " " for letter in UPPERCASES)
+                result_string_lower = "".join("{" + letter + "}" + " " for letter in LOWERCASES)
+                concatenated_string_12 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_12 = ""
+    
+            if "[" in THIRD_GROUP_PUNCTUATIONS and "]" in THIRD_GROUP_PUNCTUATIONS:
+                result_string_upper = "".join("[" + letter + "]" + " " for letter in UPPERCASES)
+                result_string_lower = "".join("[" + letter + "]" + " " for letter in LOWERCASES)
+                concatenated_string_13 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_13 = ""
+    
+            Font.newTab(
+                concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4 + concatenated_string_5 + concatenated_string_6 + concatenated_string_7 + concatenated_string_8 + concatenated_string_9 + concatenated_string_10 + concatenated_string_11 + concatenated_string_12 + concatenated_string_13)
 
-        result_string_1 = "\n".join(["".join(character + other for other in LOWERCASE) + character for character in FIRST_GROUP_PUNCTUATION[:2]])
-
-        result_string_2 = "\n".join(["".join(character + other for other in FIGURES) + character for character in FIRST_GROUP_PUNCTUATION[:2]])
-
-        result_string_3 = "\n".join([''.join([letter + punct + ' ' for letter in UPPERCASE]) for punct in FIRST_GROUP_PUNCTUATION[2:4]])
-
-        result_string_4 = "\n".join([''.join([letter + punct + ' ' for letter in LOWERCASE]) for punct in FIRST_GROUP_PUNCTUATION[2:4]])
-
-        result_string_5 = "".join(f"{letter}{FIRST_GROUP_PUNCTUATION[-2]}{letter}{FIRST_GROUP_PUNCTUATION[-1]}{letter}" + " " for letter in LOWERCASE)
-
-        Font.newTab(result_string + "\n" + result_string_1 + "\n" + result_string_2 + "\n" + result_string_3 + "\n" + result_string_4 + "\n" + result_string_5)
+    def symbol(self):
+        pass
 
 if __name__ == "__main__":
     SpacingPairs()
