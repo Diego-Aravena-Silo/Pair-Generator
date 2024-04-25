@@ -71,12 +71,17 @@ try:
     else:
         SYMBOLS = []
 
+    if 'Symbol' in my_dict and 'Math' in my_dict['Symbol']:
+        math_unicodes = my_dict['Symbol']['Math'].keys()
+        MATH_SYMBOLS = [chr(int(code, 16)) for code in math_unicodes if code != None]
+    else:
+        MATH_SYMBOLS = []
 
 except KeyError as e:
     print(f"Key error: {e}")
     UPPERCASES, LOWERCASES, CURRENCIES, FIGURES, FIRST_GROUP_PUNCTUATIONS, SECOND_GROUP_PUNCTUATIONS, THIRD_GROUP_PUNCTUATIONS, SYMBOLS = [], [], [], [], [], [], [], []
 
-print(SYMBOLS)
+print(MATH_SYMBOLS)
 
 class SpacingPairs:
 
@@ -395,7 +400,40 @@ class SpacingPairs:
             else:
                 concatenated_string_2 = ""
 
-            Font.newTab(concatenated_string + concatenated_string_1 + concatenated_string_2)
+            if "©" in SYMBOLS:
+                result_string_upper = "".join("©" + uppercase for uppercase in UPPERCASES)
+                result_string_lower = "".join("©" + lowercase for lowercase in LOWERCASE)
+                concatenated_string_3 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_3 = ""
+
+            if "®" in SYMBOLS:
+                result_string_upper = "".join("®" + uppercase for uppercase in UPPERCASES)
+                result_string_lower = "".join("®" + lowercase for lowercase in LOWERCASE)
+                concatenated_string_4 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_4 = ""
+
+            if "℗" in SYMBOLS:
+                result_string_upper = "".join("℗" + uppercase for uppercase in UPPERCASES)
+                result_string_lower = "".join("℗" + lowercase for lowercase in LOWERCASE)
+                concatenated_string_5 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_5 = ""
+
+            if "™" in SYMBOLS:
+                result_string_upper = "".join("™" + uppercase for uppercase in UPPERCASES)
+                result_string_lower = "".join("™" + lowercase for lowercase in LOWERCASE)
+                concatenated_string_6 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_6 = ""
+
+            # Generate the result string using nested comprehensions
+            concatenated_string_7 = "\n".join("".join(f"{symbol}{num}" for num in FIGURES) + symbol for symbol in MATH_SYMBOLS)
+
+            Font.newTab(
+            concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4 + concatenated_string_5 + concatenated_string_6 + concatenated_string_7
+            )
 
 if __name__ == "__main__":
     SpacingPairs()
