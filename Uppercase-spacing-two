@@ -35,9 +35,9 @@ try:
 
     if 'Symbol' in my_dict and 'Currency' in my_dict['Symbol']:
         currency_unicode = my_dict['Symbol']['Currency'].keys()
-        SYMBOLS = [chr(int(code, 16)) for code in currency_unicode if code != None]
+        CURRENCY = [chr(int(code, 16)) for code in currency_unicode if code != None]
     else:
-        SYMBOLS = []
+        CURRENCY = []
 
     if 'Number' in my_dict and 'Decimal Digit' in my_dict['Number']:
         figure_unicodes = my_dict['Number']['Decimal Digit'].keys()
@@ -56,14 +56,27 @@ try:
     if 'Punctuation' in my_dict and 'Quote' in my_dict['Punctuation']:
         second_group_unicodes = my_dict['Punctuation']['Quote'].keys()
         SECOND_GROUP_PUNCTUATION = [chr(int(code, 16)) for code in second_group_unicodes if code != None]
-
+    else:
+        SECOND_GROUP_PUNCTUATION = []
+ 
     if 'Punctuation' in my_dict and 'Parenthesis' in my_dict['Punctuation']:
         third_group_unicodes = my_dict['Punctuation']['Parenthesis'].keys()
         THIRD_GROUP_PUNCTUATION = [chr(int(code, 16)) for code in third_group_unicodes if code != None]
+    else:
+        THIRD_GROUP_PUNCTUATION = []
+
+    if 'Symbol' in my_dict and None in my_dict['Symbol']:
+        symbol_unicodes = my_dict["Symbol"][None].keys()
+        SYMBOLS = [chr(int(code, 16)) for code in symbol_unicodes if code != None]
+    else:
+        SYMBOLS = []
+
 
 except KeyError as e:
     print(f"Key error: {e}")
-    UPPERCASE, LOWERCASE, SYMBOLS, FIGURES, FIRST_GROUP_PUNCTUATION = [], [], [], [], []
+    UPPERCASE, LOWERCASE, CURRENCY, FIGURES, FIRST_GROUP_PUNCTUATION, SYMBOLS = [], [], [], [], []
+
+print(my_dict["Symbol"][None])
 
 class SpacingPairs:
 
@@ -148,6 +161,9 @@ class SpacingPairs:
         if self.w.Punctuation.get():
             self.punctuation()
             self.w.Punctuation.set(False)
+        if self.w.Symbol.get():
+            self.symbol()
+            self.w.Symbol.set(False)
 
     # Functions:
     def uppercase_spacing(self):
@@ -179,14 +195,14 @@ class SpacingPairs:
             Font.newTab(result_string)
 
     def currency_spacing(self):
-        if SYMBOLS == []:
+        if CURRENCY == []:
             pass
         else:
             figure_order = ["12","23","34","45","56","65","78","89","90","01"]
             # Concatenate all results into a single string
             result_string = "\n".join(
             ["".join(figure + symbol + " " for figure in figure_order) if symbol == "\u00A2"
-            else "".join(symbol + figure + " " for figure in figure_order) for symbol in SYMBOLS]
+            else "".join(symbol + figure + " " for figure in figure_order) for symbol in CURRENCY]
             )
 
             # Display the result string in a new tab
@@ -227,128 +243,135 @@ class SpacingPairs:
             Font.newTab(all_combinations)
 
     def punctuation(self):
-        # Generate the result string using nested comprehensions
-        if "." in FIRST_GROUP_PUNCTUATION:                
-            list_a = ["."]
-            result_string_upper = "\n".join(
-            ["".join(character + other for other in UPPERCASE) + character for character in list_a]
-            )
-            result_string_lower = "\n".join(
-            ["".join(character + other for other in LOWERCASE) + character for character in list_a]
-            )
-            concatenated_string = result_string_upper + "\n" + result_string_lower + "\n"
+        if FIRST_GROUP_PUNCTUATION == [] and SECOND_GROUP_PUNCTUATION == [] and THIRD_GROUP_PUNCTUATION == []:
+            pass
         else:
-            concatenated_string = ""
+            # Generate the result string using nested comprehensions
+            if "." in FIRST_GROUP_PUNCTUATION:
+                list_a = ["."]
+                result_string_upper = "\n".join(
+                    ["".join(character + other for other in UPPERCASE) + character for character in list_a]
+                )
+                result_string_lower = "\n".join(
+                    ["".join(character + other for other in LOWERCASE) + character for character in list_a]
+                )
+                concatenated_string = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string = ""
+    
+            if "," in FIRST_GROUP_PUNCTUATION:
+                list_a = [","]
+                result_string_upper = "\n".join(
+                    ["".join(character + other for other in UPPERCASE) + character for character in list_a]
+                )
+                result_string_lower = "\n".join(
+                    ["".join(character + other for other in LOWERCASE) + character for character in list_a]
+                )
+                concatenated_string_1 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_1 = ""
+    
+            if ":" in FIRST_GROUP_PUNCTUATION:
+                list_a = [":"]
+                result_string_upper = "\n".join(
+                    [''.join([letter + punct + ' ' for letter in UPPERCASE]) for punct in list_a]
+                )
+                result_string_lower = "\n".join(
+                    [''.join([letter + punct + ' ' for letter in LOWERCASE]) for punct in list_a]
+                )
+                concatenated_string_2 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_2 = ""
+    
+            if ";" in FIRST_GROUP_PUNCTUATION:
+                list_a = [";"]
+                result_string_upper = "\n".join(
+                    [''.join([letter + punct + ' ' for letter in UPPERCASE]) for punct in list_a]
+                )
+                result_string_lower = "\n".join(
+                    [''.join([letter + punct + ' ' for letter in LOWERCASE]) for punct in list_a]
+                )
+                concatenated_string_3 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_3 = ""
+    
+            if "//" in FIRST_GROUP_PUNCTUATION and "\\" in FIRST_GROUP_PUNCTUATION:
+                result_string_lower = "".join(letter + "//" + letter + "\\" + letter + " " for letter in LOWERCASE)
+                result_string_upper = "".join(letter + "//" + letter + "\\" + letter + " " for letter in UPPERCASE)
+                concatenated_string_4 = result_string_lower + "\n" + result_string_upper + "\n"
+            else:
+                concatenated_string_4 = ""
+    
+            if "¿" in FIRST_GROUP_PUNCTUATION and "?" in FIRST_GROUP_PUNCTUATION:
+                result_string_upper = "".join("¿" + letter + "?" + " " for letter in UPPERCASE)
+                result_string_lower = "".join("¿" + letter + "?" + " " for letter in LOWERCASE)
+                concatenated_string_5 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_5 = ""
+    
+            if "¡" in FIRST_GROUP_PUNCTUATION and "!" in FIRST_GROUP_PUNCTUATION:
+                result_string_upper = "".join("¡" + letter + "!" + " " for letter in UPPERCASE)
+                result_string_lower = "".join("¡" + letter + "!" + " " for letter in LOWERCASE)
+                concatenated_string_6 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_6 = ""
+    
+            if "“" in SECOND_GROUP_PUNCTUATION and "”" in SECOND_GROUP_PUNCTUATION:
+                result_string_upper = "".join(letter + "“" + letter + "”" + letter + " " for letter in UPPERCASE)
+                result_string_lower = "".join(letter + "“" + letter + "”" + letter + " " for letter in LOWERCASE)
+                concatenated_string_7 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_7 = ""
+    
+            if "‘" in SECOND_GROUP_PUNCTUATION and "’" in SECOND_GROUP_PUNCTUATION:
+                result_string_upper = "".join(letter + "‘" + letter + "’" + letter + " " for letter in UPPERCASE)
+                result_string_lower = "".join(letter + "‘" + letter + "’" + letter + " " for letter in LOWERCASE)
+                result_string_extra_upper = "".join(letter + "’" for letter in UPPERCASE)
+                result_string_extra_lower = "".join(letter + "’" for letter in LOWERCASE)
+                concatenated_string_8 = result_string_upper + "\n" + result_string_lower + "\n" + result_string_extra_upper + "\n" + result_string_extra_lower + "\n"
+            else:
+                concatenated_string_8 = ""
+    
+            if "«" in SECOND_GROUP_PUNCTUATION and "»" in SECOND_GROUP_PUNCTUATION:
+                result_string_upper = "".join(letter + "«" + letter + "»" + letter + " " for letter in UPPERCASE)
+                result_string_lower = "".join(letter + "«" + letter + "»" + letter + " " for letter in LOWERCASE)
+                concatenated_string_9 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_9 = ""
+    
+            if "‹" in SECOND_GROUP_PUNCTUATION and "›" in SECOND_GROUP_PUNCTUATION:
+                result_string_upper = "".join(letter + "‹" + letter + "›" + letter + " " for letter in UPPERCASE)
+                result_string_lower = "".join(letter + "‹" + letter + "›" + letter + " " for letter in LOWERCASE)
+                concatenated_string_10 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_10 = ""
+    
+            if "(" in THIRD_GROUP_PUNCTUATION and ")" in THIRD_GROUP_PUNCTUATION:
+                result_string_upper = "".join("(" + letter + ")" + " " for letter in UPPERCASE)
+                result_string_lower = "".join("(" + letter + ")" + " " for letter in LOWERCASE)
+                concatenated_string_11 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_11 = ""
+    
+            if "{" in THIRD_GROUP_PUNCTUATION and "}" in THIRD_GROUP_PUNCTUATION:
+                result_string_upper = "".join("{" + letter + "}" + " " for letter in UPPERCASE)
+                result_string_lower = "".join("{" + letter + "}" + " " for letter in LOWERCASE)
+                concatenated_string_12 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_12 = ""
+    
+            if "[" in THIRD_GROUP_PUNCTUATION and "]" in THIRD_GROUP_PUNCTUATION:
+                result_string_upper = "".join("[" + letter + "]" + " " for letter in UPPERCASE)
+                result_string_lower = "".join("[" + letter + "]" + " " for letter in LOWERCASE)
+                concatenated_string_13 = result_string_upper + "\n" + result_string_lower + "\n"
+            else:
+                concatenated_string_13 = ""
+    
+            Font.newTab(
+                concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4 + concatenated_string_5 + concatenated_string_6 + concatenated_string_7 + concatenated_string_8 + concatenated_string_9 + concatenated_string_10 + concatenated_string_11 + concatenated_string_12 + concatenated_string_13)
 
-        if "," in FIRST_GROUP_PUNCTUATION:                
-            list_a = [","]
-            result_string_upper = "\n".join(
-            ["".join(character + other for other in UPPERCASE) + character for character in list_a]
-            )
-            result_string_lower = "\n".join(
-            ["".join(character + other for other in LOWERCASE) + character for character in list_a]
-            )
-            concatenated_string_1 = result_string_upper + "\n" + result_string_lower + "\n"
-        else:
-            concatenated_string_1 = ""            
-
-        if ":" in FIRST_GROUP_PUNCTUATION:                
-            list_a = [":"]
-            result_string_upper = "\n".join(
-            [''.join([letter + punct + ' ' for letter in UPPERCASE]) for punct in list_a]
-            )
-            result_string_lower = "\n".join(
-            [''.join([letter + punct + ' ' for letter in LOWERCASE]) for punct in list_a]
-            )
-            concatenated_string_2 = result_string_upper + "\n" + result_string_lower + "\n"
-        else:
-            concatenated_string_2 = ""
-
-        if ";" in FIRST_GROUP_PUNCTUATION:                
-            list_a = [";"]
-            result_string_upper = "\n".join(
-            [''.join([letter + punct + ' ' for letter in UPPERCASE]) for punct in list_a]
-            )
-            result_string_lower = "\n".join(
-            [''.join([letter + punct + ' ' for letter in LOWERCASE]) for punct in list_a]
-            )
-            concatenated_string_3 = result_string_upper + "\n" + result_string_lower + "\n"
-        else:
-            concatenated_string_3 = ""
-
-        if "//" in FIRST_GROUP_PUNCTUATION and "\\" in FIRST_GROUP_PUNCTUATION:
-            result_string_lower = "".join(letter + "//" + letter + "\\" + letter + " " for letter in LOWERCASE)
-            result_string_upper = "".join(letter + "//" + letter + "\\" + letter + " " for letter in UPPERCASE)
-            concatenated_string_4 = result_string_lower + "\n" + result_string_upper + "\n"
-        else:
-            concatenated_string_4 = ""
-
-        if "¿" in FIRST_GROUP_PUNCTUATION and "?" in FIRST_GROUP_PUNCTUATION:
-            result_string_upper = "".join("¿" + letter + "?" + " " for letter in UPPERCASE)
-            result_string_lower = "".join("¿" + letter + "?" + " " for letter in LOWERCASE)
-            concatenated_string_5 = result_string_upper + "\n" + result_string_lower + "\n"
-        else:
-            concatenated_string_5 = ""
-
-        if "¡" in FIRST_GROUP_PUNCTUATION and "!" in FIRST_GROUP_PUNCTUATION:
-            result_string_upper = "".join("¡" + letter + "!" + " " for letter in UPPERCASE)
-            result_string_lower = "".join("¡" + letter + "!" + " " for letter in LOWERCASE)
-            concatenated_string_6 = result_string_upper + "\n" + result_string_lower + "\n"
-        else:
-            concatenated_string_6 = ""
-
-        if "“" in SECOND_GROUP_PUNCTUATION and "”" in SECOND_GROUP_PUNCTUATION:
-            result_string_upper = "".join(letter + "“" + letter + "”" + letter + " " for letter in UPPERCASE)
-            result_string_lower = "".join(letter + "“" + letter + "”" + letter + " " for letter in LOWERCASE)
-            concatenated_string_7 = result_string_upper + "\n" + result_string_lower + "\n"
-        else:
-            concatenated_string_7 = ""
-
-        if "‘" in SECOND_GROUP_PUNCTUATION and "’" in SECOND_GROUP_PUNCTUATION:
-            result_string_upper = "".join(letter + "‘" + letter + "’" + letter + " " for letter in UPPERCASE)
-            result_string_lower = "".join(letter + "‘" + letter + "’" + letter + " " for letter in LOWERCASE)
-            result_string_extra_upper = "".join(letter + "’" for letter in UPPERCASE)
-            result_string_extra_lower = "".join(letter + "’" for letter in LOWERCASE)
-            concatenated_string_8 = result_string_upper + "\n" + result_string_lower + "\n" + result_string_extra_upper + "\n" + result_string_extra_lower + "\n"
-        else:
-            concatenated_string_8 = ""
-
-        if "«" in SECOND_GROUP_PUNCTUATION and "»" in SECOND_GROUP_PUNCTUATION:
-            result_string_upper = "".join(letter + "«" + letter + "»" + letter + " " for letter in UPPERCASE)
-            result_string_lower = "".join(letter + "«" + letter + "»" + letter + " " for letter in LOWERCASE)
-            concatenated_string_9 = result_string_upper + "\n" + result_string_lower + "\n"
-        else:
-            concatenated_string_9 = ""
-
-        if "‹" in SECOND_GROUP_PUNCTUATION and "›" in SECOND_GROUP_PUNCTUATION:
-            result_string_upper = "".join(letter + "‹" + letter + "›" + letter + " " for letter in UPPERCASE)
-            result_string_lower = "".join(letter + "‹" + letter + "›" + letter + " " for letter in LOWERCASE)
-            concatenated_string_10 = result_string_upper + "\n" + result_string_lower + "\n"
-        else:
-            concatenated_string_10 = ""
-
-        if "(" in THIRD_GROUP_PUNCTUATION and ")" in THIRD_GROUP_PUNCTUATION:
-            result_string_upper = "".join("(" + letter + ")" + " " for letter in UPPERCASE)
-            result_string_lower = "".join("(" + letter + ")" + " " for letter in LOWERCASE)
-            concatenated_string_11 = result_string_upper + "\n" + result_string_lower + "\n"
-        else:
-            concatenated_string_11 = ""
-
-        if "{" in THIRD_GROUP_PUNCTUATION and "}" in THIRD_GROUP_PUNCTUATION:
-            result_string_upper = "".join("{" + letter + "}" + " " for letter in UPPERCASE)
-            result_string_lower = "".join("{" + letter + "}" + " " for letter in LOWERCASE)
-            concatenated_string_12 = result_string_upper + "\n" + result_string_lower + "\n"
-        else:
-            concatenated_string_12 = ""
-
-        if "[" in THIRD_GROUP_PUNCTUATION and "]" in THIRD_GROUP_PUNCTUATION:
-            result_string_upper = "".join("[" + letter + "]" + " " for letter in UPPERCASE)
-            result_string_lower = "".join("[" + letter + "]" + " " for letter in LOWERCASE)
-            concatenated_string_13 = result_string_upper + "\n" + result_string_lower + "\n"
-        else:
-            concatenated_string_13 = ""
-
-        Font.newTab(concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4 + concatenated_string_5 + concatenated_string_6 + concatenated_string_7 + concatenated_string_8 + concatenated_string_9 + concatenated_string_10 + concatenated_string_11 + concatenated_string_12 + concatenated_string_13)
+    def symbol(self):
+        pass
 
 if __name__ == "__main__":
     SpacingPairs()
