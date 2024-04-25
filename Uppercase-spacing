@@ -81,7 +81,6 @@ except KeyError as e:
     print(f"Key error: {e}")
     UPPERCASES, LOWERCASES, CURRENCIES, FIGURES, FIRST_GROUP_PUNCTUATIONS, SECOND_GROUP_PUNCTUATIONS, THIRD_GROUP_PUNCTUATIONS, SYMBOLS = [], [], [], [], [], [], [], []
 
-print(MATH_SYMBOLS)
 
 class SpacingPairs:
 
