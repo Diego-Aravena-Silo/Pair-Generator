@@ -57,17 +57,13 @@ try:
         second_group_unicodes = my_dict['Punctuation']['Quote'].keys()
         SECOND_GROUP_PUNCTUATION = [chr(int(code, 16)) for code in second_group_unicodes if code != None]
 
+    if 'Punctuation' in my_dict and 'Parenthesis' in my_dict['Punctuation']:
+        third_group_unicodes = my_dict['Punctuation']['Parenthesis'].keys()
+        THIRD_GROUP_PUNCTUATION = [chr(int(code, 16)) for code in third_group_unicodes if code != None]
 
 except KeyError as e:
     print(f"Key error: {e}")
     UPPERCASE, LOWERCASE, SYMBOLS, FIGURES, FIRST_GROUP_PUNCTUATION = [], [], [], [], []
-
-# Outputs for verification
-#print("Uppercase letters:", UPPERCASE)
-#print("Lowercase letters:", LOWERCASE)
-#print("Currency symbols:", SYMBOLS)
-#print("Figure characters:", FIGURES)
-print(SECOND_GROUP_PUNCTUATION)
 
 class SpacingPairs:
 
@@ -282,7 +278,7 @@ class SpacingPairs:
 
         if "//" in FIRST_GROUP_PUNCTUATION and "\\" in FIRST_GROUP_PUNCTUATION:
             result_string_lower = "".join(letter + "//" + letter + "\\" + letter + " " for letter in LOWERCASE)
-            result_string_upper = "".join(letter + "//" + letter + "\\" + letter + " " for letter in LOWERCASE)
+            result_string_upper = "".join(letter + "//" + letter + "\\" + letter + " " for letter in UPPERCASE)
             concatenated_string_4 = result_string_lower + "\n" + result_string_upper + "\n"
         else:
             concatenated_string_4 = ""
@@ -317,7 +313,42 @@ class SpacingPairs:
         else:
             concatenated_string_8 = ""
 
-        Font.newTab(concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4 + concatenated_string_5 + concatenated_string_6 + concatenated_string_7 + concatenated_string_8)
+        if "«" in SECOND_GROUP_PUNCTUATION and "»" in SECOND_GROUP_PUNCTUATION:
+            result_string_upper = "".join(letter + "«" + letter + "»" + letter + " " for letter in UPPERCASE)
+            result_string_lower = "".join(letter + "«" + letter + "»" + letter + " " for letter in LOWERCASE)
+            concatenated_string_9 = result_string_upper + "\n" + result_string_lower + "\n"
+        else:
+            concatenated_string_9 = ""
+
+        if "‹" in SECOND_GROUP_PUNCTUATION and "›" in SECOND_GROUP_PUNCTUATION:
+            result_string_upper = "".join(letter + "‹" + letter + "›" + letter + " " for letter in UPPERCASE)
+            result_string_lower = "".join(letter + "‹" + letter + "›" + letter + " " for letter in LOWERCASE)
+            concatenated_string_10 = result_string_upper + "\n" + result_string_lower + "\n"
+        else:
+            concatenated_string_10 = ""
+
+        if "(" in THIRD_GROUP_PUNCTUATION and ")" in THIRD_GROUP_PUNCTUATION:
+            result_string_upper = "".join("(" + letter + ")" + " " for letter in UPPERCASE)
+            result_string_lower = "".join("(" + letter + ")" + " " for letter in LOWERCASE)
+            concatenated_string_11 = result_string_upper + "\n" + result_string_lower + "\n"
+        else:
+            concatenated_string_11 = ""
+
+        if "{" in THIRD_GROUP_PUNCTUATION and "}" in THIRD_GROUP_PUNCTUATION:
+            result_string_upper = "".join("{" + letter + "}" + " " for letter in UPPERCASE)
+            result_string_lower = "".join("{" + letter + "}" + " " for letter in LOWERCASE)
+            concatenated_string_12 = result_string_upper + "\n" + result_string_lower + "\n"
+        else:
+            concatenated_string_12 = ""
+
+        if "[" in THIRD_GROUP_PUNCTUATION and "]" in THIRD_GROUP_PUNCTUATION:
+            result_string_upper = "".join("[" + letter + "]" + " " for letter in UPPERCASE)
+            result_string_lower = "".join("[" + letter + "]" + " " for letter in LOWERCASE)
+            concatenated_string_13 = result_string_upper + "\n" + result_string_lower + "\n"
+        else:
+            concatenated_string_13 = ""
+
+        Font.newTab(concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4 + concatenated_string_5 + concatenated_string_6 + concatenated_string_7 + concatenated_string_8 + concatenated_string_9 + concatenated_string_10 + concatenated_string_11 + concatenated_string_12 + concatenated_string_13)
 
 if __name__ == "__main__":
     SpacingPairs()
