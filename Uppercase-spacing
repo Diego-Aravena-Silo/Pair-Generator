@@ -142,6 +142,9 @@ class SpacingPairs:
         self.w.pairsButton = vanilla.Button(
             (10, 100, -10, 22), "Generate", sizeStyle="regular", callback=self.button_callback
         )
+        self.w.border = vanilla.HorizontalLine(
+        (10, 100, 100, 1)
+        )
 
         self.w.open()  # Open the window
         self.w.makeKey()  # Focus on window
