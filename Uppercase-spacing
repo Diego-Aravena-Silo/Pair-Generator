@@ -1,3 +1,8 @@
+#MenuTitle: Pairs Generator
+__doc__="""
+Generates spacing and kerning pairs.
+"""
+
 import vanilla
 
 # Initialize an empty dictionary
