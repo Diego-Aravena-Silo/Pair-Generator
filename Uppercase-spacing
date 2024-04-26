@@ -377,12 +377,28 @@ class SpacingPairs:
                 result_string_upper = "\n".join("".join(f"{punctuation}{uppercase}" for uppercase in UPPERCASES) + punctuation for punctuation in FOURTH_GROUP_PUNCTUATIONS if punctuation == "–")
                 result_string_lower = "\n".join("".join(f"{punctuation}{lowercase}" for lowercase in LOWERCASES) + punctuation for punctuation in FOURTH_GROUP_PUNCTUATIONS if punctuation == "–")
                 result_string_figures = "\n".join("".join(f"{punctuation}{figure}" for figure in FIGURES) + punctuation for punctuation in FOURTH_GROUP_PUNCTUATIONS if punctuation == "–")
-                concatenated_string_14 = result_string_upper + "\n" + result_string_lower + "\n" + result_string_figures
+                concatenated_string_14 = result_string_upper + "\n" + result_string_lower + "\n" + result_string_figures + "\n"
             else:
                 concatenated_string_14 = ""
+
+            if "." in FIRST_GROUP_PUNCTUATIONS:
+                result_string_figures = "\n".join(
+                    ["".join(punctuation + figure for figure in FIGURES) + punctuation for punctuation in FIRST_GROUP_PUNCTUATIONS if punctuation == "."]
+                )
+                concatenated_string_15 = result_string_figures + "\n" 
+            else:
+                concatenated_string_15 = ""
+
+            if "," in FIRST_GROUP_PUNCTUATIONS:
+                result_string_figures = "\n".join(
+                    ["".join(punctuation + figure for figure in FIGURES) + punctuation for punctuation in FIRST_GROUP_PUNCTUATIONS if punctuation == ","]
+                )
+                concatenated_string_16 = result_string_figures + "\n" 
+            else:
+                concatenated_string_16 = ""
     
             Font.newTab(
-                concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4 + concatenated_string_5 + concatenated_string_6 + concatenated_string_7 + concatenated_string_8 + concatenated_string_9 + concatenated_string_10 + concatenated_string_11 + concatenated_string_12 + concatenated_string_13 + concatenated_string_14)
+                concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4 + concatenated_string_5 + concatenated_string_6 + concatenated_string_7 + concatenated_string_8 + concatenated_string_9 + concatenated_string_10 + concatenated_string_11 + concatenated_string_12 + concatenated_string_13 + concatenated_string_14 + concatenated_string_15 + concatenated_string_16)
 
     def symbol(self):
         if SYMBOLS == []:
