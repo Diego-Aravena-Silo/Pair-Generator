@@ -65,6 +65,12 @@ try:
     else:
         THIRD_GROUP_PUNCTUATIONS = []
 
+    if 'Punctuation' in my_dict and 'Dash' in my_dict['Punctuation']:
+        fourth_group_unicodes = my_dict['Punctuation']['Dash'].keys()
+        FOURTH_GROUP_PUNCTUATIONS = [chr(int(code, 16)) for code in fourth_group_unicodes if code != None]
+    else:
+        FOURTH_GROUP_PUNCTUATIONS = []
+
     if 'Symbol' in my_dict and None in my_dict['Symbol']:
         symbol_unicodes = my_dict["Symbol"][None].keys()
         SYMBOLS = [chr(int(code, 16)) for code in symbol_unicodes if code != None]
@@ -79,7 +85,7 @@ try:
 
 except KeyError as e:
     print(f"Key error: {e}")
-    UPPERCASES, LOWERCASES, CURRENCIES, FIGURES, FIRST_GROUP_PUNCTUATIONS, SECOND_GROUP_PUNCTUATIONS, THIRD_GROUP_PUNCTUATIONS, SYMBOLS = [], [], [], [], [], [], [], []
+    UPPERCASES, LOWERCASES, CURRENCIES, FIGURES, FIRST_GROUP_PUNCTUATIONS, SECOND_GROUP_PUNCTUATIONS, THIRD_GROUP_PUNCTUATIONS, FOURTH_GROUP_PUNCTUATIONS, SYMBOLS, MATH_SYMBOLS = [], [], [], [], [], [], [], [], [], []
 
 
 class SpacingPairs:
@@ -252,48 +258,44 @@ class SpacingPairs:
         else:
             # Generate the result string using nested comprehensions
             if "." in FIRST_GROUP_PUNCTUATIONS:
-                list_a = ["."]
                 result_string_upper = "\n".join(
-                    ["".join(punctuation + uppercase for uppercase in UPPERCASES) + punctuation for punctuation in list_a]
+                    ["".join(punctuation + uppercase for uppercase in UPPERCASES) + punctuation for punctuation in FIRST_GROUP_PUNCTUATIONS if punctuation == "."]
                 )
                 result_string_lower = "\n".join(
-                    ["".join(punctuation + lowercase for lowercase in LOWERCASES) + punctuation for punctuation in list_a]
+                    ["".join(punctuation + lowercase for lowercase in LOWERCASES) + punctuation for punctuation in FIRST_GROUP_PUNCTUATIONS if punctuation == "."]
                 )
                 concatenated_string = result_string_upper + "\n" + result_string_lower + "\n"
             else:
                 concatenated_string = ""
     
             if "," in FIRST_GROUP_PUNCTUATIONS:
-                list_a = [","]
                 result_string_upper = "\n".join(
-                    ["".join(punctuation + uppercase for uppercase in UPPERCASES) + punctuation for punctuation in list_a]
+                    ["".join(punctuation + uppercase for uppercase in UPPERCASES) + punctuation for punctuation in FIRST_GROUP_PUNCTUATIONS if punctuation == ","]
                 )
                 result_string_lower = "\n".join(
-                    ["".join(punctuation + lowercase for lowercase in LOWERCASES) + punctuation for punctuation in list_a]
+                    ["".join(punctuation + lowercase for lowercase in LOWERCASES) + punctuation for punctuation in FIRST_GROUP_PUNCTUATIONS if punctuation == ","]
                 )
                 concatenated_string_1 = result_string_upper + "\n" + result_string_lower + "\n"
             else:
                 concatenated_string_1 = ""
     
             if ":" in FIRST_GROUP_PUNCTUATIONS:
-                list_a = [":"]
                 result_string_upper = "\n".join(
-                    [''.join([uppercase + punctuation + ' ' for uppercase in UPPERCASES]) for punctuation in list_a]
+                    [''.join([uppercase + punctuation + ' ' for uppercase in UPPERCASES]) for punctuation in FIRST_GROUP_PUNCTUATIONS if punctuation == ":"]
                 )
                 result_string_lower = "\n".join(
-                    [''.join([lowercase + punctuation + ' ' for lowercase in LOWERCASES]) for punctuation in list_a]
+                    [''.join([lowercase + punctuation + ' ' for lowercase in LOWERCASES]) for punctuation in FIRST_GROUP_PUNCTUATIONS if punctuation == ":"]
                 )
                 concatenated_string_2 = result_string_upper + "\n" + result_string_lower + "\n"
             else:
                 concatenated_string_2 = ""
     
             if ";" in FIRST_GROUP_PUNCTUATIONS:
-                list_a = [";"]
                 result_string_upper = "\n".join(
-                    [''.join([uppercase + punctuation + ' ' for uppercase in UPPERCASES]) for punctuation in list_a]
+                    [''.join([uppercase + punctuation + ' ' for uppercase in UPPERCASES]) for punctuation in FIRST_GROUP_PUNCTUATIONS if punctuation == ";"]
                 )
                 result_string_lower = "\n".join(
-                    [''.join([lowercase + punctuation + ' ' for lowercase in LOWERCASES]) for punctuation in list_a]
+                    [''.join([lowercase + punctuation + ' ' for lowercase in LOWERCASES]) for punctuation in FIRST_GROUP_PUNCTUATIONS if punctuation == ";"]
                 )
                 concatenated_string_3 = result_string_upper + "\n" + result_string_lower + "\n"
             else:
@@ -370,9 +372,17 @@ class SpacingPairs:
                 concatenated_string_13 = result_string_upper + "\n" + result_string_lower + "\n"
             else:
                 concatenated_string_13 = ""
+
+            if "–" in FOURTH_GROUP_PUNCTUATIONS:
+                result_string_upper = "\n".join("".join(f"{punctuation}{uppercase}" for uppercase in UPPERCASES) + punctuation for punctuation in FOURTH_GROUP_PUNCTUATIONS if punctuation == "–")
+                result_string_lower = "\n".join("".join(f"{punctuation}{lowercase}" for lowercase in LOWERCASES) + punctuation for punctuation in FOURTH_GROUP_PUNCTUATIONS if punctuation == "–")
+                result_string_figures = "\n".join("".join(f"{punctuation}{figure}" for figure in FIGURES) + punctuation for punctuation in FOURTH_GROUP_PUNCTUATIONS if punctuation == "–")
+                concatenated_string_14 = result_string_upper + "\n" + result_string_lower + "\n" + result_string_figures
+            else:
+                concatenated_string_14 = ""
     
             Font.newTab(
-                concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4 + concatenated_string_5 + concatenated_string_6 + concatenated_string_7 + concatenated_string_8 + concatenated_string_9 + concatenated_string_10 + concatenated_string_11 + concatenated_string_12 + concatenated_string_13)
+                concatenated_string + concatenated_string_1 + concatenated_string_2 + concatenated_string_3 + concatenated_string_4 + concatenated_string_5 + concatenated_string_6 + concatenated_string_7 + concatenated_string_8 + concatenated_string_9 + concatenated_string_10 + concatenated_string_11 + concatenated_string_12 + concatenated_string_13 + concatenated_string_14)
 
     def symbol(self):
         if SYMBOLS == []:
