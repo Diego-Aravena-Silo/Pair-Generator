@@ -143,7 +143,16 @@ class SpacingPairs:
 
     def checkbox_callback(self, sender):
         # This function can be used to handle checkbox state changes if needed
-        pass
+        if self.w.All.get():
+            self.w.uppercase.set(True)
+            self.w.lowercase.set(True)
+            self.w.number.set(True)
+            self.w.currency.set(True)
+            self.w.allUpper.set(True)
+            self.w.allLower.set(True)
+            self.w.UppervsLower.set(True)
+            self.w.Punctuation.set(True)
+            self.w.Symbol.set(True)
 
     def button_callback(self, sender):
         # This method is called when the button is pressed.
@@ -174,6 +183,8 @@ class SpacingPairs:
         if self.w.Symbol.get():
             self.symbol()
             self.w.Symbol.set(False)
+        if self.w.All.get():
+            self.w.All.set(False)
 
     # Functions:
     def uppercase_spacing(self):
