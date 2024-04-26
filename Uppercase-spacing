@@ -97,7 +97,7 @@ class SpacingPairs:
 
     def __init__(self):
         self.windowWidth = 333
-        self.windowHeight = 145
+        self.windowHeight = 200
         self.windowWidthResize = 100  # user can resize width by this value
         self.windowHeightResize = 100  # user can resize height by this value
 
@@ -143,7 +143,7 @@ class SpacingPairs:
             (10, 100, -10, 22), "Generate", sizeStyle="regular", callback=self.button_callback
         )
         self.w.border = vanilla.HorizontalLine(
-        (10, 100, 100, 1)
+        (10, 100, -10, 82)
         )
 
         self.w.open()  # Open the window
@@ -424,50 +424,50 @@ class SpacingPairs:
             pass
         else:
             if "@" in SYMBOLS:
-                result_string_upper = "".join("@" + uppercase for uppercase in UPPERCASES)
-                result_string_lower = "".join("@" + lowercase for lowercase in LOWERCASE)
+                result_string_upper = "\n".join("".join(f"{symbol}{uppercase}" for uppercase in UPPERCASES) + symbol for symbol in SYMBOLS if symbol == "@")
+                result_string_lower = "\n".join("".join(f"{symbol}{uppercase}" for uppercase in LOWERCASES) + symbol for symbol in SYMBOLS if symbol == "@")
                 concatenated_string = result_string_upper + "\n" + result_string_lower + "\n"
             else:
                 concatenated_string = ""
 
             if "&" in SYMBOLS:
-                result_string_upper = "".join("&" + uppercase for uppercase in UPPERCASES)
-                result_string_lower = "".join("&" + lowercase for lowercase in LOWERCASE)
+                result_string_upper = "\n".join("".join(f"{symbol}{uppercase}" for uppercase in UPPERCASES) + symbol for symbol in SYMBOLS if symbol == "&")
+                result_string_lower = "\n".join("".join(f"{symbol}{uppercase}" for uppercase in LOWERCASES) + symbol for symbol in SYMBOLS if symbol == "&")
                 concatenated_string_1 = result_string_upper + "\n" + result_string_lower + "\n"
             else:
                 concatenated_string_1 = ""
 
             if "¶" in SYMBOLS:
-                result_string_upper = "".join("¶" + uppercase for uppercase in UPPERCASES)
-                result_string_lower = "".join("¶" + lowercase for lowercase in LOWERCASE)
+                result_string_upper = "\n".join("".join(f"{symbol}{uppercase}" for uppercase in UPPERCASES) + symbol for symbol in SYMBOLS if symbol == "¶")
+                result_string_lower = "\n".join("".join(f"{symbol}{uppercase}" for uppercase in LOWERCASES) + symbol for symbol in SYMBOLS if symbol == "¶")
                 concatenated_string_2 = result_string_upper + "\n" + result_string_lower + "\n"
             else:
                 concatenated_string_2 = ""
 
             if "©" in SYMBOLS:
-                result_string_upper = "".join("©" + uppercase for uppercase in UPPERCASES)
-                result_string_lower = "".join("©" + lowercase for lowercase in LOWERCASE)
+                result_string_upper = "\n".join("".join(f"{symbol}{uppercase}" for uppercase in UPPERCASES) + symbol for symbol in SYMBOLS if symbol == "©")
+                result_string_lower = "\n".join("".join(f"{symbol}{uppercase}" for uppercase in LOWERCASES) + symbol for symbol in SYMBOLS if symbol == "©")
                 concatenated_string_3 = result_string_upper + "\n" + result_string_lower + "\n"
             else:
                 concatenated_string_3 = ""
 
             if "®" in SYMBOLS:
-                result_string_upper = "".join("®" + uppercase for uppercase in UPPERCASES)
-                result_string_lower = "".join("®" + lowercase for lowercase in LOWERCASE)
+                result_string_upper = "\n".join("".join(f"{symbol}{uppercase}" for uppercase in UPPERCASES) + symbol for symbol in SYMBOLS if symbol == "®")
+                result_string_lower = "\n".join("".join(f"{symbol}{uppercase}" for uppercase in LOWERCASES) + symbol for symbol in SYMBOLS if symbol == "®")
                 concatenated_string_4 = result_string_upper + "\n" + result_string_lower + "\n"
             else:
                 concatenated_string_4 = ""
 
             if "℗" in SYMBOLS:
-                result_string_upper = "".join("℗" + uppercase for uppercase in UPPERCASES)
-                result_string_lower = "".join("℗" + lowercase for lowercase in LOWERCASE)
+                result_string_upper = "\n".join("".join(f"{symbol}{uppercase}" for uppercase in UPPERCASES) + symbol for symbol in SYMBOLS if symbol == "℗")
+                result_string_lower = "\n".join("".join(f"{symbol}{uppercase}" for uppercase in LOWERCASES) + symbol for symbol in SYMBOLS if symbol == "℗")
                 concatenated_string_5 = result_string_upper + "\n" + result_string_lower + "\n"
             else:
                 concatenated_string_5 = ""
 
             if "™" in SYMBOLS:
-                result_string_upper = "".join("™" + uppercase for uppercase in UPPERCASES)
-                result_string_lower = "".join("™" + lowercase for lowercase in LOWERCASE)
+                result_string_upper = "\n".join("".join(f"{symbol}{uppercase}" for uppercase in UPPERCASES) + symbol for symbol in SYMBOLS if symbol == "™")
+                result_string_lower = "\n".join("".join(f"{symbol}{uppercase}" for uppercase in LOWERCASES) + symbol for symbol in SYMBOLS if symbol == "™")
                 concatenated_string_6 = result_string_upper + "\n" + result_string_lower + "\n"
             else:
                 concatenated_string_6 = ""
