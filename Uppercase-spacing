@@ -145,6 +145,9 @@ class SpacingPairs:
         self.w.border = vanilla.HorizontalLine(
         (10, 100, -10, 82)
         )
+        self.w.instructionText = vanilla.TextBox(
+        (10, 150, -10, 82), '''If another font window opens while Pairs Generator is on, restart Pairs Generator.''', sizeStyle='small'
+        )
 
         self.w.open()  # Open the window
         self.w.makeKey()  # Focus on window
