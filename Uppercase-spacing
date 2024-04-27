@@ -54,7 +54,7 @@ try:
         first_group_unicodes = my_dict['Punctuation'][None].keys()
         FIRST_GROUP_PUNCTUATIONS = [chr(int(code, 16)) for code in first_group_unicodes if code != None]
         if "/" in FIRST_GROUP_PUNCTUATIONS:
-            FIRST_GROUP_PUNCTUATIONS = ['//' if item == '/' else item for item in FIRST_GROUP_PUNCTUATION]
+            FIRST_GROUP_PUNCTUATIONS = ['//' if item == '/' else item for item in FIRST_GROUP_PUNCTUATIONS]
     else:
         FIRST_GROUP_PUNCTUATIONS = []
 
